@@ -42,5 +42,23 @@ public class SimpleSourceImplTest {
    @Test( expected = IllegalArgumentException.class ) public void shouldNotAcceptNullFunction(){
       systemUnderTest = new SimpleSourceImpl( source, null );
    }//End Method
+   
+   @Test public void shouldProvideObjectToStringByDefault(){
+      systemUnderTest = new SimpleSourceImpl( source );
+      assertThat( systemUnderTest.getIdentifier(), is( source.toString() ) );
+   }//End Method
+   
+   @Test public void shouldBeEqual(){
+      assertThat( systemUnderTest.equals( systemUnderTest ), is( true ) );
+      assertThat( systemUnderTest.equals( new SimpleSourceImpl( source ) ), is( true ) );
+      
+      assertThat( systemUnderTest.equals( null ), is( false ) );
+      assertThat( systemUnderTest.equals( "anything" ), is( false ) );
+      assertThat( systemUnderTest.equals( new SimpleSourceImpl( new Object() ) ), is( false ) );
+   }//End Method
+   
+   @Test public void shouldHashCodeToSameValues(){
+      assertThat( systemUnderTest.hashCode(), is( new SimpleSourceImpl( source ).hashCode() ) );
+   }//End Method
 
 }//End Class

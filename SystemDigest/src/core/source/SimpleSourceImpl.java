@@ -32,10 +32,48 @@ public class SimpleSourceImpl implements Source {
    }//End Constructor
    
    /**
+    * Constructs a new {@link SimpleSourceImpl} with the given source a default identifier {@link Object#toString()}.
+    * @param source the {@link Object} source.
+    */
+   public SimpleSourceImpl( Object source ) {
+      this( source, object -> { return source.toString(); } );
+   }//End Constructor
+
+   /**
     * {@inheritDoc}
     */
    @Override public String getIdentifier() {
       return identifierFunction.apply( source );
    }//End Method
 
+   /**
+    * {@inheritDoc}
+    */
+   @Override public int hashCode() {
+      final int prime = 31;
+      int result = 1;
+      result = prime * result + source.hashCode();
+      return result;
+   }//End Method
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override public boolean equals( Object obj ) {
+      if ( this == obj ) {
+         return true;
+      }
+      if ( obj == null ) {
+         return false;
+      }
+      if ( !( obj instanceof SimpleSourceImpl ) ) {
+         return false;
+      }
+      SimpleSourceImpl other = ( SimpleSourceImpl ) obj;
+      if ( !source.equals( other.source ) ) {
+         return false;
+      }
+      return true;
+   }//End Method
+   
 }//End Class

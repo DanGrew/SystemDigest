@@ -14,4 +14,10 @@ package core.progress;
  */
 public interface Progress {
 
+   /**
+    * Method to get the percentage complete that has been logged.
+    * @return the percentage.
+    */
+   public double getPercentage();
+
 }//End Interface

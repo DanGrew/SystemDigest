@@ -14,4 +14,10 @@ package core.message;
  */
 public interface Message {
 
+   /**
+    * Method to get the {@link String} message provided.
+    * @return the {@link String} message.
+    */
+   public String getMessage();
+
 }//End Interface
