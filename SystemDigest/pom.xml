@@ -5,6 +5,22 @@
   <version>1.0.0-SNAPSHOT</version>
   <name>SystemDigest</name>
   <description>Mechanism for system progress.</description>
+  
+  	<!-- configure github for maven release committing branches and changes -->
+	<scm>
+		<developerConnection>scm:git:git@github.com:DanGrew/SystemDigest</developerConnection>
+		<tag>HEAD</tag>
+	</scm>
+
+	<!-- configure the repository to publish to on build -->
+	<distributionManagement>
+		<repository>
+			<id>system-digest</id>
+			<name>System Digest Repository</name>
+			<url>http://192.168.0.15:14445/repository/system-digest/</url>
+		</repository>
+	</distributionManagement>
+  
   <build>
 		<sourceDirectory>src</sourceDirectory>
 		<testSourceDirectory>test</testSourceDirectory>
