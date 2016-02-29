@@ -11,6 +11,7 @@ package core.lockdown;
 import static org.mockito.Mockito.verify;
 
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -29,6 +30,10 @@ public class DigestMessageReceiverImplTest {
    @Mock private Category category;
    @Mock private Message message;
    private DigestMessageReceiverImpl systemUnderTest;
+   
+   @BeforeClass public static void initialiseSystemDigest(){
+      DigestManager.reset();
+   }//End Method
    
    @Before public void initialiseSystemUnderTest(){
       MockitoAnnotations.initMocks( this );
