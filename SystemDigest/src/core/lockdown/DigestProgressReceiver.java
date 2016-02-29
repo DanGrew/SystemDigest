@@ -8,25 +8,16 @@
  */
 package core.lockdown;
 
-import core.category.Category;
 import core.message.Message;
 import core.progress.Progress;
 import core.source.Source;
 
 /**
- * The {@link DigestReceiver} provides an interface for an object that wishes to recieve
+ * The {@link DigestProgressReceiver} provides an interface for an object that wishes to receive
  * information from the system digest.
  */
-public interface DigestReceiver {
+public interface DigestProgressReceiver {
    
-   /**
-    * Method to log a {@link Message} for the given {@link Category} for the given {@link Source}.
-    * @param source the {@link Source} of the {@link Message}.
-    * @param category the {@link Category} of the {@link Message}.
-    * @param message the {@link Message}.
-    */
-   public void log( Source source, Category category, Message message );
-
    /**
     * Method to log a {@link Message} indicating the given {@link Progress} for the given {@link Source}.
     * @param source the {@link Source} of the {@link Message}.

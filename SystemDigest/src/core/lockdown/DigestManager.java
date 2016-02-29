@@ -40,13 +40,22 @@ class DigestManager {
       DigestManager.instance = instance;
    }//End Method
    
-   private Set< DigestReceiver > receivers;
+   /**
+    * Method to reset the instance of the {@link DigestManager}.
+    */
+   public static void reset() {
+      setInstance( new DigestManager() );
+   }//End Method
+   
+   private Set< DigestMessageReceiver > messageReceivers;
+   private Set< DigestProgressReceiver > progressReceivers;
    
    /**
     * Constructs a new {@link DigestManager}.
     */
    DigestManager() {
-      receivers = new LinkedHashSet<>();
+      messageReceivers = new LinkedHashSet<>();
+      progressReceivers = new LinkedHashSet<>();
    }//End Constructor
 
    /**
@@ -56,17 +65,17 @@ class DigestManager {
     * @param message the {@link Message}.
     */
    void log( Source source, Category category, Message message ) {
-      receivers.forEach( connector -> connector.log( source, category, message ) );
+      messageReceivers.forEach( connector -> connector.log( source, category, message ) );
    }//End Method
 
    /**
-    * Method to register the given {@link DigestReceiver} for logs and progress.
-    * @param receiver the {@link DigestReceiver} to receive information. 
+    * Method to register the given {@link DigestMessageReceiver} for messages.
+    * @param receiver the {@link DigestMessageReceiver} to receive information. 
     */
-   void registerReceiver( DigestReceiver receiver ) {
-      if ( receivers.contains( receiver ) ) return;
+   void registerMessageReceiver( DigestMessageReceiver receiver ) {
+      if ( messageReceivers.contains( receiver ) ) return;
       
-      receivers.add( receiver );
+      messageReceivers.add( receiver );
    }//End Method
 
    /**
@@ -76,7 +85,17 @@ class DigestManager {
     * @param message the {@link Message}.
     */
    void progress( Source source, Progress progress, Message message ) {
-      receivers.forEach( connector -> connector.progress( source, progress, message ) );
+      progressReceivers.forEach( connector -> connector.progress( source, progress, message ) );
+   }//End Method
+
+   /**
+    * Method to register the given {@link DigestProgressReceiver} for progress.
+    * @param receiver the {@link DigestProgressReceiver} to receive information. 
+    */
+   void registerProgressReceiver( DigestProgressReceiver progressReceiver ) {
+      if ( progressReceivers.contains( progressReceiver ) ) return;
+      
+      progressReceivers.add( progressReceiver );
    }//End Method
 
 }//End Class

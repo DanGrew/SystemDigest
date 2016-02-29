@@ -23,8 +23,10 @@ import org.mockito.MockitoAnnotations;
 
 import core.category.Categories;
 import core.category.Category;
-import core.lockdown.DigestReceiver;
-import core.lockdown.DigestReceiverImpl;
+import core.lockdown.DigestMessageReceiver;
+import core.lockdown.DigestMessageReceiverImpl;
+import core.lockdown.DigestProgressReceiver;
+import core.lockdown.DigestProgressReceiverImpl;
 import core.message.Message;
 import core.progress.Progress;
 import core.source.SimpleSourceImpl;
@@ -35,7 +37,8 @@ import core.source.Source;
  */
 public class DemoObjectTest {
    
-   @Mock private DigestReceiver receiver;
+   @Mock private DigestMessageReceiver messageReceiver;
+   @Mock private DigestProgressReceiver progressReceiver;
    @Captor private ArgumentCaptor< Source > sourceCaptor;
    @Captor private ArgumentCaptor< Category > categoryCaptor;
    @Captor private ArgumentCaptor< Progress > progressCaptor;
@@ -44,12 +47,13 @@ public class DemoObjectTest {
    
    @Before public void initialiseSystemUnderTest(){
       MockitoAnnotations.initMocks( this );
-      new DigestReceiverImpl( receiver );
+      new DigestMessageReceiverImpl( messageReceiver );
+      new DigestProgressReceiverImpl( progressReceiver );
       systemUnderTest = new DemoObject();
    }//End Method
 
    @Test public void shouldRecordObjectAllocationOnConstruction() {
-      verify( receiver ).log( sourceCaptor.capture(), categoryCaptor.capture(), messageCaptor.capture() );
+      verify( messageReceiver ).log( sourceCaptor.capture(), categoryCaptor.capture(), messageCaptor.capture() );
       assertThat( sourceCaptor.getValue(), is( new SimpleSourceImpl( systemUnderTest ) ) );
       assertThat( categoryCaptor.getValue(), is( Categories.objectAllocation() ) );
       assertThat( messageCaptor, notNullValue() );
@@ -57,8 +61,8 @@ public class DemoObjectTest {
    
    @Test public void shouldRecordProgress(){
       systemUnderTest.processSomeInformation( 10 );
-      verify( receiver, times( 11 ) ).log( sourceCaptor.capture(), categoryCaptor.capture(), messageCaptor.capture() );
-      verify( receiver, times( 10 ) ).progress( sourceCaptor.capture(), progressCaptor.capture(), messageCaptor.capture() );
+      verify( messageReceiver, times( 11 ) ).log( sourceCaptor.capture(), categoryCaptor.capture(), messageCaptor.capture() );
+      verify( progressReceiver, times( 10 ) ).progress( sourceCaptor.capture(), progressCaptor.capture(), messageCaptor.capture() );
       //check construction
       assertThat( sourceCaptor.getAllValues().get( 0 ), is( new SimpleSourceImpl( systemUnderTest ) ) );
       assertThat( categoryCaptor.getAllValues().get( 0 ), is( Categories.objectAllocation() ) );
