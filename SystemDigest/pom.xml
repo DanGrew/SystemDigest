@@ -6,6 +6,11 @@
   <name>SystemDigest</name>
   <description>Mechanism for system progress.</description>
   
+    <!-- define custom property for disabling unit tests during failsafe build -->
+	<properties>
+		<skip.surefire.tests>${skipTests}</skip.surefire.tests>
+	</properties>
+  
   	<!-- configure github for maven release committing branches and changes -->
 	<scm>
 		<developerConnection>scm:git:git@github.com:DanGrew/SystemDigest</developerConnection>
