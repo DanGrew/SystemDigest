@@ -8,6 +8,12 @@
  */
 package core.category;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
+import core.message.MessageFilter;
+
 /**
  * {@link Categories} provides default common categories predefined for external use.
  */
@@ -60,4 +66,17 @@ public class Categories {
       return PROCESSING_SEQUENCE;
    }//End Method
 
+   /**
+    * Method to provide a basic {@link MessageFilter} that only matches the given {@link Category}s, exactly.
+    * @param category at least one {@link Category} to match.
+    * @param otherCategories other {@link Category}s to match if required.
+    * @return a {@link MessageFilter} that only matches those {@link Category}s provided.
+    */
+   public static MessageFilter filter( Category category, Category... otherCategories ) {
+      final Set< Category > matches = new HashSet<>();
+      matches.add( category );
+      matches.addAll( Arrays.asList( otherCategories ) );
+      return ( s, c, m ) -> { return matches.contains( c ); };
+   }//End Method
+   
 }//End Class

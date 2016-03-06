@@ -12,8 +12,13 @@ import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.mock;
 
 import org.junit.Test;
+
+import core.message.Message;
+import core.message.MessageFilter;
+import core.source.Source;
 
 /**
  * {@link Categories} test.
@@ -69,5 +74,20 @@ public class CategoriesTest {
       assertThat( Categories.processingSequence(), is( category ) );
       assertThat( Categories.processingSequence(), is( category ) );
    }//End Method
+   
+   @Test public void shouldProvideDefaultCategoryFilter(){
+      MessageFilter filter = Categories.filter( Categories.information() );
+      assertThat( filter.matches( mock( Source.class ), mock( Category.class ), mock( Message.class ) ), is( false ) );
+      assertThat( filter.matches( mock( Source.class ), Categories.information(), mock( Message.class ) ), is( true ) );
+      assertThat( filter.matches( mock( Source.class ), Categories.error(), mock( Message.class ) ), is( false ) );
+   }//End Method
 
+   @Test public void shouldProvideDefaultCategoryFilterForMultiple(){
+      MessageFilter filter = Categories.filter( Categories.information(), Categories.objectAllocation() );
+      assertThat( filter.matches( mock( Source.class ), mock( Category.class ), mock( Message.class ) ), is( false ) );
+      assertThat( filter.matches( mock( Source.class ), Categories.information(), mock( Message.class ) ), is( true ) );
+      assertThat( filter.matches( mock( Source.class ), Categories.objectAllocation(), mock( Message.class ) ), is( true ) );
+      assertThat( filter.matches( mock( Source.class ), Categories.error(), mock( Message.class ) ), is( false ) );
+   }//End Method
+   
 }//End Class
