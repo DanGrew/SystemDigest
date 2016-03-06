@@ -13,15 +13,19 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import core.category.Category;
 import core.message.Message;
+import core.message.MessageFilter;
 import core.progress.Progress;
+import core.progress.ProgressFilter;
 import core.source.Source;
 
 /**
@@ -100,6 +104,56 @@ public class DigestManagerTest {
       systemUnderTest.registerProgressReceiver( progressReceiver );
       systemUnderTest.progress( source, progress, message );
       verify( progressReceiver, times( 1 ) ).progress( source, progress, message );
+   }//End Method
+   
+   @Test public void shouldFilterMessagesUsingMatcher(){
+      MessageFilter filter = mock( MessageFilter.class );
+      when( filter.matches( Mockito.any(), Mockito.any(), Mockito.any() ) ).thenReturn( false, true );
+      
+      systemUnderTest.registerMessageReceiver( messageReceiver, filter );
+      
+      systemUnderTest.log( source, category, message );
+      verify( messageReceiver, times( 0 ) ).log( source, category, message );
+      
+      systemUnderTest.log( source, category, message );
+      verify( messageReceiver, times( 1 ) ).log( source, category, message );
+   }//End Method
+   
+   @Test public void shouldFilterProgressUsingMatcher(){
+      ProgressFilter filter = mock( ProgressFilter.class );
+      when( filter.matches( Mockito.any(), Mockito.any(), Mockito.any() ) ).thenReturn( false, true );
+      
+      systemUnderTest.registerProgressReceiver( progressReceiver, filter );
+      
+      systemUnderTest.progress( source, progress, message );
+      verify( progressReceiver, times( 0 ) ).progress( source, progress, message );
+      
+      systemUnderTest.progress( source, progress, message );
+      verify( progressReceiver, times( 1 ) ).progress( source, progress, message );
+   }//End Method
+   
+   @Test public void shouldOverrideMessageFilterWhenReregistered(){
+      MessageFilter firstFilter = mock( MessageFilter.class );
+      MessageFilter secondfilter = mock( MessageFilter.class );
+      
+      systemUnderTest.registerMessageReceiver( messageReceiver, firstFilter );
+      systemUnderTest.registerMessageReceiver( messageReceiver, secondfilter );
+      
+      systemUnderTest.log( source, category, message );
+      verify( firstFilter, times( 0 ) ).matches( source, category, message );
+      verify( secondfilter, times( 1 ) ).matches( source, category, message );
+   }//End Method
+   
+   @Test public void shouldOverrideProgressFilterWhenReregistered(){
+      ProgressFilter firstFilter = mock( ProgressFilter.class );
+      ProgressFilter secondFilter = mock( ProgressFilter.class );
+      
+      systemUnderTest.registerProgressReceiver( progressReceiver, firstFilter );
+      systemUnderTest.registerProgressReceiver( progressReceiver, secondFilter );
+      
+      systemUnderTest.progress( source, progress, message );
+      verify( firstFilter, times( 0 ) ).matches( source, progress, message );
+      verify( secondFilter, times( 1 ) ).matches( source, progress, message );
    }//End Method
 
 }//End Class

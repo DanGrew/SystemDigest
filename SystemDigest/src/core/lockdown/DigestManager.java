@@ -8,12 +8,14 @@
  */
 package core.lockdown;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import core.category.Category;
 import core.message.Message;
+import core.message.MessageFilter;
 import core.progress.Progress;
+import core.progress.ProgressFilter;
 import core.source.Source;
 
 /**
@@ -47,15 +49,15 @@ class DigestManager {
       setInstance( new DigestManager() );
    }//End Method
    
-   private Set< DigestMessageReceiver > messageReceivers;
-   private Set< DigestProgressReceiver > progressReceivers;
+   private Map< DigestMessageReceiver, MessageFilter > messageReceivers;
+   private Map< DigestProgressReceiver, ProgressFilter > progressReceivers;
    
    /**
     * Constructs a new {@link DigestManager}.
     */
    DigestManager() {
-      messageReceivers = new LinkedHashSet<>();
-      progressReceivers = new LinkedHashSet<>();
+      messageReceivers = new LinkedHashMap<>();
+      progressReceivers = new LinkedHashMap<>();
    }//End Constructor
 
    /**
@@ -65,7 +67,11 @@ class DigestManager {
     * @param message the {@link Message}.
     */
    void log( Source source, Category category, Message message ) {
-      messageReceivers.forEach( connector -> connector.log( source, category, message ) );
+      messageReceivers.forEach( ( receiver, filter ) -> {
+         if ( filter == null || filter.matches( source, category, message ) ) {
+            receiver.log( source, category, message );
+         }
+      } );
    }//End Method
 
    /**
@@ -73,11 +79,18 @@ class DigestManager {
     * @param receiver the {@link DigestMessageReceiver} to receive information. 
     */
    void registerMessageReceiver( DigestMessageReceiver receiver ) {
-      if ( messageReceivers.contains( receiver ) ) return;
-      
-      messageReceivers.add( receiver );
+      registerMessageReceiver( receiver, null );
    }//End Method
 
+   /**
+    * Method to register the given {@link DigestMessageReceiver} for messages.
+    * @param messageReceiver the {@link DigestMessageReceiver} to receive information. 
+    * @param filter the {@link MessageFilter}.
+    */
+   void registerMessageReceiver( DigestMessageReceiver messageReceiver, MessageFilter filter ) {
+      messageReceivers.put( messageReceiver, filter );
+   }//End Method
+   
    /**
     * Method to log a {@link Message} indicating the given {@link Progress} for the given {@link Source}.
     * @param source the {@link Source} of the {@link Message}.
@@ -85,7 +98,11 @@ class DigestManager {
     * @param message the {@link Message}.
     */
    void progress( Source source, Progress progress, Message message ) {
-      progressReceivers.forEach( connector -> connector.progress( source, progress, message ) );
+      progressReceivers.forEach( ( receiver, filter ) -> {
+         if ( filter == null || filter.matches( source, progress, message ) ) {
+            receiver.progress( source, progress, message );
+         }
+      } );
    }//End Method
 
    /**
@@ -93,9 +110,16 @@ class DigestManager {
     * @param receiver the {@link DigestProgressReceiver} to receive information. 
     */
    void registerProgressReceiver( DigestProgressReceiver progressReceiver ) {
-      if ( progressReceivers.contains( progressReceiver ) ) return;
-      
-      progressReceivers.add( progressReceiver );
+      registerProgressReceiver( progressReceiver, null );
+   }//End Method
+
+   /**
+    * Method to register the given {@link DigestProgressReceiver} for progress.
+    * @param progressReceiver the {@link DigestProgressReceiver} to receive information.
+    * @param filter the {@link ProgressFilter}. 
+    */
+   void registerProgressReceiver( DigestProgressReceiver progressReceiver, ProgressFilter filter ) {
+      progressReceivers.put( progressReceiver, filter );
    }//End Method
 
 }//End Class
