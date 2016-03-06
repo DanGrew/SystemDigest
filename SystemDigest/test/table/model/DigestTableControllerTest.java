@@ -52,6 +52,7 @@ public class DigestTableControllerTest {
    
    @Test public void shouldForwardMessagesOntoTable() {
       objectDigest.log( category, message );
+      PlatformImpl.runAndWait( () -> {} );
       assertThat( rows.size(), is( 1 ) );
       
       DigestTableRow row = rows.get( 0 );
@@ -72,6 +73,7 @@ public class DigestTableControllerTest {
       objectDigest.log( category, third );
       objectDigest.log( category, fourth );
       
+      PlatformImpl.runAndWait( () -> {} );
       assertThat( rows.size(), is( 5 ) );
       
       assertThat( rows.get( 0 ).getMessage(), is( fourth ) );

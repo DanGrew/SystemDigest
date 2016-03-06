@@ -6,7 +6,7 @@
  *                 2016
  * ----------------------------------------
  */
- package core.progress;
+package core.progress;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
@@ -14,15 +14,14 @@ import static org.junit.Assert.assertThat;
 import org.junit.Test;
 
 /**
- * {@link ProgressImpl} test.
+ * {@link ProgressCompleteImpl} test.
  */
-public class ProgressImplTest {
+public class ProgressCompleteImplTest {
 
-   @Test public void shouldProvideBasicProgressPercentage() {
-      final double percentage = 56.8;
-      Progress progress = new ProgressImpl( percentage );
-      assertThat( progress.getPercentage(), is( percentage ) );
-      assertThat( progress.isComplete(), is( false ) );
+   @Test public void shouldBeDefinedForCompletion() {
+      Progress systemUnderTest = new ProgressCompleteImpl();
+      assertThat( systemUnderTest.getPercentage(), is( 100.0 ) );
+      assertThat( systemUnderTest.isComplete(), is( true ) );
    }//End Method
 
 }//End Class

@@ -40,7 +40,7 @@ public class TestApplication extends Application {
     * {@inheritDoc}
     */
    @Override public void start( Stage primaryStage ) throws Exception {
-      Scene scene = new Scene( center );
+      Scene scene = new Scene( center, 100, 100 );
       primaryStage.setScene( scene );
       primaryStage.show();
    }//End Method

@@ -10,6 +10,8 @@
 
 import java.time.LocalTime;
 
+import com.sun.javafx.application.PlatformImpl;
+
 import core.category.Category;
 import core.lockdown.DigestMessageReceiver;
 import core.lockdown.DigestMessageReceiverImpl;
@@ -28,7 +30,7 @@ public class DigestTableController implements DigestMessageReceiver {
     * Constructs a new {@link DigestTableController}.
     * @param digestTable the associated {@link DigestTable}.
     */
-   public DigestTableController( DigestTable digestTable ) {
+   DigestTableController( DigestTable digestTable ) {
       this.digestTable = digestTable;
       new DigestMessageReceiverImpl( this );
    }//End Constructor
@@ -37,7 +39,9 @@ public class DigestTableController implements DigestMessageReceiver {
     * {@inheritDoc}
     */
    @Override public void log( Source source, Category category, Message message ) {
-      digestTable.getRows().add( 0, new DigestTableRow( LocalTime.now(), source, category, message ) );
+      PlatformImpl.runLater( () -> {
+         digestTable.getRows().add( 0, new DigestTableRow( LocalTime.now(), source, category, message ) );
+      } );
    }//End Method
 
 }//End Class

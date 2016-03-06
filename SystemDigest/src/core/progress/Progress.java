@@ -19,5 +19,11 @@ public interface Progress {
     * @return the percentage.
     */
    public double getPercentage();
+   
+   /**
+    * Method to determine whether the {@link Progress} provides a completion indication.
+    * @return true if completion.
+    */
+   public boolean isComplete();
 
 }//End Interface

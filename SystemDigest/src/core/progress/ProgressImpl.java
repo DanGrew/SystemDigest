@@ -29,5 +29,12 @@ public class ProgressImpl implements Progress {
    @Override public double getPercentage(){
       return percentage;
    }//End Method
+   
+   /**
+    * {@inheritDoc}
+    */
+   @Override public boolean isComplete() {
+      return false;
+   }//End Method
 
 }//End Class
