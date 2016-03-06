@@ -19,7 +19,7 @@ import com.sun.javafx.application.PlatformImpl;
 
 import core.message.Message;
 import core.progress.Progress;
-import core.source.SimpleSourceImpl;
+import core.source.SourceImpl;
 import core.source.Source;
 import digest.object.ObjectDigest;
 import digest.object.ObjectDigestImpl;
@@ -40,7 +40,7 @@ public class DigestProgressBarControllerTest {
       PlatformImpl.startup( () -> {} );
       MockitoAnnotations.initMocks( this );
       
-      source = new SimpleSourceImpl( this );
+      source = new SourceImpl( this );
       objectDigest = new ObjectDigestImpl( source );
       systemUnderTest = new DigestProgressBarController( digestProgressBar );
    }//End Method

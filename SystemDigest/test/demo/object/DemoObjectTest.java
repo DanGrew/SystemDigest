@@ -29,7 +29,7 @@ import core.lockdown.DigestProgressReceiver;
 import core.lockdown.DigestProgressReceiverImpl;
 import core.message.Message;
 import core.progress.Progress;
-import core.source.SimpleSourceImpl;
+import core.source.SourceImpl;
 import core.source.Source;
 
 /**
@@ -54,7 +54,7 @@ public class DemoObjectTest {
 
    @Test public void shouldRecordObjectAllocationOnConstruction() {
       verify( messageReceiver ).log( sourceCaptor.capture(), categoryCaptor.capture(), messageCaptor.capture() );
-      assertThat( sourceCaptor.getValue(), is( new SimpleSourceImpl( systemUnderTest ) ) );
+      assertThat( sourceCaptor.getValue(), is( new SourceImpl( systemUnderTest ) ) );
       assertThat( categoryCaptor.getValue(), is( Categories.objectAllocation() ) );
       assertThat( messageCaptor, notNullValue() );
    }//End Method
@@ -64,20 +64,20 @@ public class DemoObjectTest {
       verify( messageReceiver, times( 11 ) ).log( sourceCaptor.capture(), categoryCaptor.capture(), messageCaptor.capture() );
       verify( progressReceiver, times( 10 ) ).progress( sourceCaptor.capture(), progressCaptor.capture(), messageCaptor.capture() );
       //check construction
-      assertThat( sourceCaptor.getAllValues().get( 0 ), is( new SimpleSourceImpl( systemUnderTest ) ) );
+      assertThat( sourceCaptor.getAllValues().get( 0 ), is( new SourceImpl( systemUnderTest ) ) );
       assertThat( categoryCaptor.getAllValues().get( 0 ), is( Categories.objectAllocation() ) );
       assertThat( messageCaptor.getAllValues().get( 0 ), notNullValue() );
       
       //check category messages
       for ( int i = 1; i < 11; i++ ) {
-         assertThat( sourceCaptor.getAllValues().get( i ), is( new SimpleSourceImpl( systemUnderTest ) ) );
+         assertThat( sourceCaptor.getAllValues().get( i ), is( new SourceImpl( systemUnderTest ) ) );
          assertThat( categoryCaptor.getAllValues().get( i ), is( Categories.processingSequence() ) );
          assertThat( messageCaptor.getAllValues().get( i ), notNullValue() );
       }
       
       //check progress
       for ( int i = 0; i < 10; i++ ) {
-         assertThat( sourceCaptor.getAllValues().get( i ), is( new SimpleSourceImpl( systemUnderTest ) ) );
+         assertThat( sourceCaptor.getAllValues().get( i ), is( new SourceImpl( systemUnderTest ) ) );
          assertThat( progressCaptor.getAllValues().get( i ).getPercentage(), is( ( i + 1 ) * 10.0 ) );
          assertThat( messageCaptor.getAllValues().get( i ), notNullValue() );
       }

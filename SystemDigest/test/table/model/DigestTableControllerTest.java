@@ -22,7 +22,7 @@ import com.sun.javafx.application.PlatformImpl;
 
 import core.category.Category;
 import core.message.Message;
-import core.source.SimpleSourceImpl;
+import core.source.SourceImpl;
 import digest.object.ObjectDigest;
 import digest.object.ObjectDigestImpl;
 import javafx.collections.FXCollections;
@@ -46,7 +46,7 @@ public class DigestTableControllerTest {
       rows = FXCollections.observableArrayList();
       when( digestTable.getRows() ).thenReturn( rows );
       
-      objectDigest = new ObjectDigestImpl( new SimpleSourceImpl( this ) );
+      objectDigest = new ObjectDigestImpl( new SourceImpl( this ) );
       systemUnderTest = new DigestTableController( digestTable );
    }//End Method
    
@@ -56,7 +56,7 @@ public class DigestTableControllerTest {
       assertThat( rows.size(), is( 1 ) );
       
       DigestTableRow row = rows.get( 0 );
-      assertThat( row.getSource(), is( new SimpleSourceImpl( this ) ) );
+      assertThat( row.getSource(), is( new SourceImpl( this ) ) );
       assertThat( row.getCategory(), is( category ) );
       assertThat( row.getMessage(), is( message ) );
    }//End Method

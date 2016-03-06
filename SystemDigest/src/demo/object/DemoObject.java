@@ -11,7 +11,7 @@
 import core.category.Categories;
 import core.message.MessageImpl;
 import core.progress.ProgressImpl;
-import core.source.SimpleSourceImpl;
+import core.source.SourceImpl;
 import digest.object.ObjectDigest;
 import digest.object.ObjectDigestImpl;
 
@@ -26,7 +26,7 @@ public class DemoObject {
     * Constructs a new {@link DemoObject}.
     */
    public DemoObject() {
-      digest = new ObjectDigestImpl( new SimpleSourceImpl( this ) );
+      digest = new ObjectDigestImpl( new SourceImpl( this ) );
       digest.log( Categories.objectAllocation(), new MessageImpl( toString() ) );
    }//End Constructor
    

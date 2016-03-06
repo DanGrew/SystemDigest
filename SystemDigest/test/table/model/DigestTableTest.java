@@ -22,7 +22,7 @@ import org.junit.Test;
 
 import core.category.Categories;
 import core.message.Messages;
-import core.source.SimpleSourceImpl;
+import core.source.SourceImpl;
 import digest.object.ObjectDigest;
 import digest.object.ObjectDigestImpl;
 import graphics.launch.TestApplication;
@@ -46,7 +46,7 @@ public class DigestTableTest {
    @Test public void manual() throws Exception {
       TestApplication.launch( () -> { return new BorderPane( new DigestTable() ); } );
       
-      ObjectDigest digest = new ObjectDigestImpl( new SimpleSourceImpl( this ) );
+      ObjectDigest digest = new ObjectDigestImpl( new SourceImpl( this ) );
       digest.log( Categories.objectAllocation(), Messages.simpleMessage( "oh yes! a new object..." ) );
       
       digest.log( Categories.objectAllocation(), Messages.simpleMessage( "something else" ) );
@@ -111,13 +111,13 @@ public class DigestTableTest {
    @Test public void shouldDisplayRowInformationFromDigestTableRow(){
       DigestTableRow row1 = new DigestTableRow( 
                LocalTime.now(), 
-               new SimpleSourceImpl( this ), 
+               new SourceImpl( this ), 
                Categories.objectAllocation(), 
                Messages.simpleMessage( "anything" ) 
       );
       DigestTableRow row2 = new DigestTableRow( 
                LocalTime.now(), 
-               new SimpleSourceImpl( new Object() ), 
+               new SourceImpl( new Object() ), 
                Categories.processingSequence(), 
                Messages.simpleMessage( "something else" ) 
       );

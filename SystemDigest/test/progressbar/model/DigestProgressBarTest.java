@@ -23,7 +23,7 @@ import com.sun.javafx.application.PlatformImpl;
 import core.message.Messages;
 import core.progress.ProgressImpl;
 import core.progress.Progresses;
-import core.source.SimpleSourceImpl;
+import core.source.SourceImpl;
 import graphics.launch.TestApplication;
 import javafx.geometry.Pos;
 import javafx.scene.layout.ColumnConstraints;
@@ -38,7 +38,7 @@ public class DigestProgressBarTest {
    
    @Before public void initialiseSystemUnderTest() throws InterruptedException{
       TestApplication.launch( () -> { 
-         systemUnderTest = new DigestProgressBar( new SimpleSourceImpl( this ) );
+         systemUnderTest = new DigestProgressBar( new SourceImpl( this ) );
          return systemUnderTest;
       } );
    }//End Method
@@ -104,7 +104,7 @@ public class DigestProgressBarTest {
       
       assertThat( 
                systemUnderTest.messageLabel().getText(), 
-               is( DigestProgressBar.concatenateSourceAndMessage( new SimpleSourceImpl( this ), Messages.simpleMessage( message ) ) ) 
+               is( DigestProgressBar.concatenateSourceAndMessage( new SourceImpl( this ), Messages.simpleMessage( message ) ) ) 
       );
       assertThat( systemUnderTest.progressBar().getProgress(), is( progress ) );
    }//End Method
@@ -112,7 +112,7 @@ public class DigestProgressBarTest {
    @Test public void shouldConcatenateSourceAndMessage(){
       final String message = "anything";
       assertThat( 
-               DigestProgressBar.concatenateSourceAndMessage( new SimpleSourceImpl( this ), Messages.simpleMessage( message ) ), 
+               DigestProgressBar.concatenateSourceAndMessage( new SourceImpl( this ), Messages.simpleMessage( message ) ), 
                is( toString() + ": " + message ) 
       );
    }//End Method

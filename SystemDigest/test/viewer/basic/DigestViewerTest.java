@@ -21,7 +21,7 @@ import core.category.Categories;
 import core.message.Messages;
 import core.progress.ProgressImpl;
 import core.progress.Progresses;
-import core.source.SimpleSourceImpl;
+import core.source.SourceImpl;
 import digest.object.ObjectDigest;
 import digest.object.ObjectDigestImpl;
 import graphics.launch.TestApplication;
@@ -37,7 +37,7 @@ public class DigestViewerTest {
    private DigestViewer systemUnderTest;
    
    @Before public void initialiseSystemUnderTest() throws InterruptedException{
-      thisObjectDigest = new ObjectDigestImpl( new SimpleSourceImpl( this ) );
+      thisObjectDigest = new ObjectDigestImpl( new SourceImpl( this ) );
       
       TestApplication.launch( () -> { 
          systemUnderTest = new DigestViewer();
@@ -53,7 +53,7 @@ public class DigestViewerTest {
             thisObjectDigest.progress( new ProgressImpl( j / 100.0 ), Messages.simpleMessage( "looping " + j ) );
             
             if ( j == 34 || j == 65 || j == 89 ) {
-               ObjectDigest anotherObjectDigest = new ObjectDigestImpl( new SimpleSourceImpl( new Object() ) );
+               ObjectDigest anotherObjectDigest = new ObjectDigestImpl( new SourceImpl( new Object() ) );
                for ( int k = 0; k < 51; k++ ) {
                   final int l = k;
                   anotherObjectDigest.progress( new ProgressImpl( l / 50.0 ), Messages.simpleMessage( "sub processing " + l ) );

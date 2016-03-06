@@ -28,7 +28,7 @@ import core.message.Messages;
 import core.progress.Progress;
 import core.progress.ProgressImpl;
 import core.progress.Progresses;
-import core.source.SimpleSourceImpl;
+import core.source.SourceImpl;
 import core.source.Source;
 import digest.object.ObjectDigest;
 import digest.object.ObjectDigestImpl;
@@ -46,7 +46,7 @@ public class DigestProgressBarsTest {
    private DigestProgressBars systemUnderTest;
    
    @Before public void initialiseSystemUnderTest() throws InterruptedException{
-      source = new SimpleSourceImpl( this );
+      source = new SourceImpl( this );
       objectDigest = new ObjectDigestImpl( source );
       MockitoAnnotations.initMocks( this );
       
@@ -62,11 +62,11 @@ public class DigestProgressBarsTest {
       for ( int i = 0; i < 101; i++ ) {
          final int j = i;
          PlatformImpl.runAndWait( () -> {
-            systemUnderTest.handleProgress( new SimpleSourceImpl( this ), new ProgressImpl( j / 100.0 ), Messages.simpleMessage( "looping " + j ) );
+            systemUnderTest.handleProgress( new SourceImpl( this ), new ProgressImpl( j / 100.0 ), Messages.simpleMessage( "looping " + j ) );
             if ( j < 51 ) {
-               systemUnderTest.handleProgress( new SimpleSourceImpl( object ), new ProgressImpl( j / 50.0 ), Messages.simpleMessage( "looping " + j ) );
+               systemUnderTest.handleProgress( new SourceImpl( object ), new ProgressImpl( j / 50.0 ), Messages.simpleMessage( "looping " + j ) );
             } else if ( j == 51 ){
-               systemUnderTest.handleProgress( new SimpleSourceImpl( object ), Progresses.complete(), Messages.simpleMessage( "done" ) );
+               systemUnderTest.handleProgress( new SourceImpl( object ), Progresses.complete(), Messages.simpleMessage( "done" ) );
             }
             try {
                Thread.sleep( 100 );
@@ -76,7 +76,7 @@ public class DigestProgressBarsTest {
          } );
       }
       PlatformImpl.runAndWait( () -> {
-         systemUnderTest.handleProgress( new SimpleSourceImpl( this ), Progresses.complete(), Messages.simpleMessage( "done" ) );
+         systemUnderTest.handleProgress( new SourceImpl( this ), Progresses.complete(), Messages.simpleMessage( "done" ) );
       } );
       Thread.sleep( 1000000 );
    }//End Method
@@ -105,9 +105,9 @@ public class DigestProgressBarsTest {
       progress = Progresses.simpleProgress( 22 );
       
       objectDigest.progress( progress, message );
-      new ObjectDigestImpl( new SimpleSourceImpl( new Object() ) ).progress( progress, message );
-      new ObjectDigestImpl( new SimpleSourceImpl( new Object() ) ).progress( progress, message );
-      new ObjectDigestImpl( new SimpleSourceImpl( new Object() ) ).progress( progress, message );
+      new ObjectDigestImpl( new SourceImpl( new Object() ) ).progress( progress, message );
+      new ObjectDigestImpl( new SourceImpl( new Object() ) ).progress( progress, message );
+      new ObjectDigestImpl( new SourceImpl( new Object() ) ).progress( progress, message );
       
       PlatformImpl.runAndWait( () -> {} );
       assertThat( systemUnderTest.progressLayout().getChildren(), hasSize( 4 ) );
@@ -119,15 +119,15 @@ public class DigestProgressBarsTest {
       
       objectDigest.progress( progress, message );
       
-      Source sourceA = new SimpleSourceImpl( new Object() );
+      Source sourceA = new SourceImpl( new Object() );
       ObjectDigest objectDigestA = new ObjectDigestImpl( sourceA );
       objectDigestA.progress( progress, message );
       
-      Source sourceB = new SimpleSourceImpl( new Object() );
+      Source sourceB = new SourceImpl( new Object() );
       ObjectDigest objectDigestB = new ObjectDigestImpl( sourceB );
       objectDigestB.progress( progress, message );
       
-      Source sourceC = new SimpleSourceImpl( new Object() );
+      Source sourceC = new SourceImpl( new Object() );
       ObjectDigest objectDigestC = new ObjectDigestImpl( sourceC );
       objectDigestC.progress( progress, message );
       
@@ -164,15 +164,15 @@ public class DigestProgressBarsTest {
       
       objectDigest.progress( progress, message );
       
-      Source sourceA = new SimpleSourceImpl( new Object() );
+      Source sourceA = new SourceImpl( new Object() );
       ObjectDigest objectDigestA = new ObjectDigestImpl( sourceA );
       objectDigestA.progress( progressA, message );
       
-      Source sourceB = new SimpleSourceImpl( new Object() );
+      Source sourceB = new SourceImpl( new Object() );
       ObjectDigest objectDigestB = new ObjectDigestImpl( sourceB );
       objectDigestB.progress( progressB, message );
       
-      Source sourceC = new SimpleSourceImpl( new Object() );
+      Source sourceC = new SourceImpl( new Object() );
       ObjectDigest objectDigestC = new ObjectDigestImpl( sourceC );
       objectDigestC.progress( progressC, message );
       
