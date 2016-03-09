@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>SystemDigest</groupId>
 	<artifactId>SystemDigest</artifactId>
-	<version>1.0.3-SNAPSHOT</version>
+	<version>1.0.5-SNAPSHOT</version>
 	<name>SystemDigest</name>
 	<description>Mechanism for system progress.</description>
 
