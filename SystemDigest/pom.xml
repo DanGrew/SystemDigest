@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>SystemDigest</groupId>
 	<artifactId>SystemDigest</artifactId>
-	<version>1.0.2</version>
+	<version>1.0.3-SNAPSHOT</version>
 	<name>SystemDigest</name>
 	<description>Mechanism for system progress.</description>
 
@@ -14,7 +14,7 @@
 	<!-- configure github for maven release committing branches and changes -->
 	<scm>
 		<developerConnection>scm:git:git@github.com:DanGrew/SystemDigest</developerConnection>
-		<tag>SystemDigest-1.0.2</tag>
+		<tag>SystemDigest-1.0.0</tag>
 	</scm>
 
 	<!-- configure the repository to publish to on build -->
