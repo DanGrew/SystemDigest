@@ -19,16 +19,14 @@ import core.progress.Progress;
 public interface ObjectDigest {
    
    /**
-    * Method to log a {@link Message} for the given {@link Category} for the given {@link Source}.
-    * @param source the {@link Source} of the {@link Message}.
+    * Method to log a {@link Message} for the given {@link Category} for the given {@link core.source.Source}.
     * @param category the {@link Category} of the {@link Message}.
     * @param message the {@link Message}.
     */
    public void log( Category category, Message message );
 
    /**
-    * Method to log a {@link Message} indicating the given {@link Progress} for the given {@link Source}.
-    * @param source the {@link Source} of the {@link Message}.
+    * Method to log a {@link Message} indicating the given {@link Progress} for the given {@link core.source.Source}.
     * @param progress the {@link Progress} being reported.
     * @param message the {@link Message}.
     */
