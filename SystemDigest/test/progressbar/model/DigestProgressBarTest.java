@@ -106,7 +106,7 @@ public class DigestProgressBarTest {
                systemUnderTest.messageLabel().getText(), 
                is( DigestProgressBar.concatenateSourceAndMessage( new SourceImpl( this ), Messages.simpleMessage( message ) ) ) 
       );
-      assertThat( systemUnderTest.progressBar().getProgress(), is( progress ) );
+      assertThat( systemUnderTest.progressBar().getProgress(), is( progress / 100.0 ) );
    }//End Method
    
    @Test public void shouldConcatenateSourceAndMessage(){
