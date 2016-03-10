@@ -9,6 +9,7 @@
 package viewer.basic;
 
 import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
 import org.junit.Before;
@@ -33,6 +34,8 @@ import table.model.DigestTable;
  */
 public class DigestViewerTest {
 
+   private static final double WIDTH = 432;
+   private static final double HEIGHT = 987;
    private ObjectDigest thisObjectDigest;
    private DigestViewer systemUnderTest;
    
@@ -40,7 +43,7 @@ public class DigestViewerTest {
       thisObjectDigest = new ObjectDigestImpl( new SourceImpl( this ) );
       
       TestApplication.launch( () -> { 
-         systemUnderTest = new DigestViewer();
+         systemUnderTest = new DigestViewer( WIDTH, HEIGHT );
          return systemUnderTest;
       } );
    }//End Method
@@ -88,5 +91,11 @@ public class DigestViewerTest {
    
    @Test public void shouldHaveTableAtBottom() {
       assertThat( systemUnderTest.getBottom(), instanceOf( DigestTable.class ) );
+   }//End Method
+   
+   @Test public void tableShouldHaveGivenPreferredWidthAndHeight(){
+      DigestTable table = ( DigestTable )systemUnderTest.getBottom();
+      assertThat( table.getPrefWidth(), is( WIDTH ) );
+      assertThat( table.getPrefHeight(), is( HEIGHT ) );
    }//End Method
 }//End Class
