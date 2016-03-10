@@ -40,6 +40,15 @@ public class SourceImpl implements Source {
    }//End Constructor
 
    /**
+    * Constructs a new {@link SourceImpl}.
+    * @param source the {@link Object} source.
+    * @param name the constant name to use as an identifier.
+    */
+   public SourceImpl( Object source, String name ) {
+      this( source, object -> { return name; } );
+   }//End Constructor
+
+   /**
     * {@inheritDoc}
     */
    @Override public String getIdentifier() {

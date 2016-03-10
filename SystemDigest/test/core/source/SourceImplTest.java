@@ -40,7 +40,8 @@ public class SourceImplTest {
    }//End Method
    
    @Test( expected = IllegalArgumentException.class ) public void shouldNotAcceptNullFunction(){
-      systemUnderTest = new SourceImpl( source, null );
+      final Function< Object, String > function = null;
+      systemUnderTest = new SourceImpl( source, function );
    }//End Method
    
    @Test public void shouldProvideObjectToStringByDefault(){
@@ -59,6 +60,12 @@ public class SourceImplTest {
    
    @Test public void shouldHashCodeToSameValues(){
       assertThat( systemUnderTest.hashCode(), is( new SourceImpl( source ).hashCode() ) );
+   }//End Method
+   
+   @Test public void shouldConstructWithConstantName(){
+      final String name = "any name";
+      systemUnderTest = new SourceImpl( this, name );
+      assertThat( systemUnderTest.getIdentifier(), is( name ) );
    }//End Method
 
 }//End Class
