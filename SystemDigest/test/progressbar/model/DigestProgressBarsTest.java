@@ -96,7 +96,7 @@ public class DigestProgressBarsTest {
       assertThat( systemUnderTest.progressLayout().getChildren(), hasSize( 1 ) );
       
       DigestProgressBar progressBar = ( DigestProgressBar )systemUnderTest.progressLayout().getChildren().get( 0 );
-      assertThat( progressBar.progressBar().getProgress(), is( progress.getPercentage() ) );
+      assertThat( progressBar.progressBar().getProgress(), is( Progress.percentageToProgress( progress.getPercentage() ) ) );
       assertThat( progressBar.messageLabel().getText(), is( DigestProgressBar.concatenateSourceAndMessage( source, message ) ) );
    }//End Method
 
@@ -179,10 +179,22 @@ public class DigestProgressBarsTest {
       PlatformImpl.runAndWait( () -> {} );
       assertThat( systemUnderTest.progressLayout().getChildren(), hasSize( 4 ) );
       
-      assertThat( systemUnderTest.digestProgressBar( source ).progressBar().getProgress(), is( progress.getPercentage() ) );
-      assertThat( systemUnderTest.digestProgressBar( sourceA ).progressBar().getProgress(), is( progressA.getPercentage() ) );
-      assertThat( systemUnderTest.digestProgressBar( sourceB ).progressBar().getProgress(), is( progressB.getPercentage() ) );
-      assertThat( systemUnderTest.digestProgressBar( sourceC ).progressBar().getProgress(), is( progressC.getPercentage() ) );
+      assertThat( 
+               systemUnderTest.digestProgressBar( source ).progressBar().getProgress(), 
+               is( Progress.percentageToProgress( progress.getPercentage() ) ) 
+      );
+      assertThat( 
+               systemUnderTest.digestProgressBar( sourceA ).progressBar().getProgress(), 
+               is( Progress.percentageToProgress( progressA.getPercentage() ) ) 
+      );
+      assertThat( 
+               systemUnderTest.digestProgressBar( sourceB ).progressBar().getProgress(), 
+               is( Progress.percentageToProgress( progressB.getPercentage() ) ) 
+      );
+      assertThat(
+               systemUnderTest.digestProgressBar( sourceC ).progressBar().getProgress(), 
+               is( Progress.percentageToProgress( progressC.getPercentage() ) ) 
+      );
       
       progress = new ProgressImpl( 79.654 );
       objectDigest.progress( progress, message );
@@ -190,10 +202,22 @@ public class DigestProgressBarsTest {
       PlatformImpl.runAndWait( () -> {} );
       assertThat( systemUnderTest.progressLayout().getChildren(), hasSize( 4 ) );
       
-      assertThat( systemUnderTest.digestProgressBar( source ).progressBar().getProgress(), is( progress.getPercentage() ) );
-      assertThat( systemUnderTest.digestProgressBar( sourceA ).progressBar().getProgress(), is( progressA.getPercentage() ) );
-      assertThat( systemUnderTest.digestProgressBar( sourceB ).progressBar().getProgress(), is( progressB.getPercentage() ) );
-      assertThat( systemUnderTest.digestProgressBar( sourceC ).progressBar().getProgress(), is( progressC.getPercentage() ) );
+      assertThat( 
+               systemUnderTest.digestProgressBar( source ).progressBar().getProgress(), 
+               is( Progress.percentageToProgress( progress.getPercentage() ) ) 
+      );
+      assertThat( 
+               systemUnderTest.digestProgressBar( sourceA ).progressBar().getProgress(), 
+               is( Progress.percentageToProgress( progressA.getPercentage() ) ) 
+      );
+      assertThat( 
+               systemUnderTest.digestProgressBar( sourceB ).progressBar().getProgress(), 
+               is( Progress.percentageToProgress( progressB.getPercentage() ) ) 
+      );
+      assertThat( 
+               systemUnderTest.digestProgressBar( sourceC ).progressBar().getProgress(), 
+               is( Progress.percentageToProgress( progressC.getPercentage() ) ) 
+      );
    }//End Method
    
 }//End Class

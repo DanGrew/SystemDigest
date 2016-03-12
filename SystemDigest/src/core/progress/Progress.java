@@ -25,5 +25,16 @@ public interface Progress {
     * @return true if completion.
     */
    public boolean isComplete();
+   
+   /**
+    * Method to convert the given percentage to the equivalent progress associated with {@link javafx.scene.control.ProgressBar}s.
+    * @param percentage the percentage to convert.
+    * @return the converted progress.
+    */
+   public static double percentageToProgress( double percentage ) {
+      if ( percentage < 0 ) return 0;
+      if ( percentage > 100 ) return 1;
+      return percentage / 100.0;
+   }//End Method
 
 }//End Interface

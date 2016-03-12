@@ -59,7 +59,7 @@ public class DigestProgressBar extends GridPane {
     * @param message the {@link Message} associated.
     */
    void handleProgress( Progress progress, Message message ) {
-      progressBar.setProgress( progress.getPercentage() / 100.0 );
+      progressBar.setProgress( Progress.percentageToProgress( progress.getPercentage() ) );
       messageLabel.setText( concatenateSourceAndMessage( source, message ) );
    }//End Method
    
