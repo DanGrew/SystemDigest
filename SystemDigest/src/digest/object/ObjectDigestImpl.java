@@ -37,16 +37,44 @@ public class ObjectDigestImpl implements ObjectDigest {
     * @param digestConnector the {@link DigestConnector} to connect to the system digest.
     */
    ObjectDigestImpl( Source source, DigestConnector digestConnector ) {
+      this( digestConnector );
+      attachSource( source );
+   }//End Constructor
+   
+   /**
+    * Constructs a new {@link ObjectDigestImpl} with a default {@link DigestConnector}.
+    * Note that no {@link Source} is attached and must be done separately.
+    */
+   protected ObjectDigestImpl() {
+      this( new DigestConnectorImpl() );
+   }//End Constructor
+   
+   /**
+    * Constructs a new {@link ObjectDigestImpl}.
+    * Note that no {@link Source} is attached and must be done separately.
+    * @param digestConnector the {@link DigestConnector}.
+    */
+   private ObjectDigestImpl( DigestConnector digestConnector ) {
+      this.digestConnector = digestConnector;
+   }//End Class
+   
+   /**
+    * Method to attach the {@link Source} to this {@link ObjectDigestImpl}. This is vital
+    * for this object to function correctly.
+    * @param source the {@link Source} to attach.
+    */
+   protected final void attachSource( Source source ){
       if ( source == null ) throw new IllegalArgumentException( "Source not provided." );
       
-      this.source = source;
-      this.digestConnector = digestConnector;
-   }//End Constructor
+      this.source = source;      
+   }//End Method
 
    /**
     * {@inheritDoc}
     */
    @Override public void log( Category category, Message message ) {
+      if ( source == null ) throw new IllegalStateException( "No source attached." );
+      
       digestConnector.log( source, category, message );
    }//End Method
 
@@ -54,6 +82,8 @@ public class ObjectDigestImpl implements ObjectDigest {
     * {@inheritDoc}
     */
    @Override public void progress( Progress progress, Message message ) {
+      if ( source == null ) throw new IllegalStateException( "No source attached." );
+      
       digestConnector.progress( source, progress, message );
    }//End Method
 

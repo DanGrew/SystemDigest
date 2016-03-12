@@ -8,6 +8,7 @@
  */
 package digest.object;
 
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 import org.junit.Before;
@@ -26,7 +27,7 @@ import core.source.Source;
  */
 public class ObjectDigestImplTest {
 
-   private ObjectDigest systemUnderTest;
+   private ObjectDigestImpl systemUnderTest;
    
    @Mock private DigestConnector connector;
    @Mock private Source source;
@@ -50,7 +51,29 @@ public class ObjectDigestImplTest {
    }//End Method
    
    @Test( expected = IllegalArgumentException.class ) public void shouldNotAcceptNullSource(){
-      systemUnderTest = new ObjectDigestImpl( null );
+      Source source = null;
+      systemUnderTest = new ObjectDigestImpl( source );
+   }//End Method
+   
+   @Test public void shouldAttachSource(){
+      Source alternateSource = mock( Source.class );
+      systemUnderTest.attachSource( alternateSource );
+      systemUnderTest.log( category, message );
+      verify( connector ).log( alternateSource, category, message ); 
+      systemUnderTest.progress( progress, message );
+      verify( connector ).progress( alternateSource, progress, message );
+   }//End Method
+   
+   @Test( expected = IllegalStateException.class ) 
+   public void shouldAllowConstructionWithConnectorOnlyButEnforceSourceAttachedForLog(){
+      systemUnderTest = new ObjectDigestImpl();
+      systemUnderTest.log( category, message );
+   }//End Method
+   
+   @Test( expected = IllegalStateException.class ) 
+   public void shouldAllowConstructionWithConnectorOnlyButEnforceSourceAttachedForProgress(){
+      systemUnderTest = new ObjectDigestImpl();
+      systemUnderTest.progress( progress, message );
    }//End Method
 
 }//End Class
