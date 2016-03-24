@@ -22,7 +22,7 @@ import core.source.Source;
  * The {@link DigestManager} is responsible for connecting objects that providing logging
  * and {@link Message}s to {@link DigestReceiver}s that want the information.
  */
-class DigestManager {
+public class DigestManager {
    
    private static DigestManager instance = new DigestManager();
 
@@ -120,6 +120,14 @@ class DigestManager {
     */
    void registerProgressReceiver( DigestProgressReceiver progressReceiver, ProgressFilter filter ) {
       progressReceivers.put( progressReceiver, filter );
+   }//End Method
+
+   /**
+    * Method to unregister the given {@link DigestMessageReceiver}. It will no longer receive messages.
+    * @param messageReceiver the {@link DigestMessageReceiver} to unregister.
+    */
+   void unregisterMessageReceiver( DigestMessageReceiver messageReceiver ) {
+      messageReceivers.remove( messageReceiver );
    }//End Method
 
 }//End Class
