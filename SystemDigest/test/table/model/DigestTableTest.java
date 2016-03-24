@@ -8,6 +8,7 @@
  */
  package table.model;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
@@ -20,7 +21,10 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import com.sun.javafx.application.PlatformImpl;
+
 import core.category.Categories;
+import core.category.Category;
 import core.message.Messages;
 import core.source.SourceImpl;
 import digest.object.ObjectDigest;
@@ -35,10 +39,12 @@ import table.presentation.CategoryColouredCell;
  */
 public class DigestTableTest {
 
+   private ObjectDigest digest;
    private DigestTable systemUnderTest;
    
    @Before public void initialiseSystemUnderTest(){
       TestApplication.startPlatform();
+      digest = new ObjectDigestImpl( new SourceImpl( this ) );
       systemUnderTest = new DigestTable();
    }//End Method
    
@@ -138,6 +144,44 @@ public class DigestTableTest {
       assertThat( systemUnderTest.getColumns().get( 3 ).getCellData( 0 ), is( row1.getMessage().getMessage() ) );
       assertThat( systemUnderTest.getColumns().get( 3 ).getCellData( 1 ), is( row2.getMessage().getMessage() ) );
       assertThat( systemUnderTest.getColumns().get( 3 ).getCellData( 2 ), nullValue() );
+   }//End Method
+   
+   @Test public void shouldBeConnectedToSystemDigest(){
+      assertThat( systemUnderTest.getRows(), hasSize( 0 ) );
+      sendDigestMessagesAndWait( Categories.error() );
+      assertThat( systemUnderTest.getRows(), hasSize( 1 ) );
+   }//End Method
+   
+   /**
+    * Method to send messages through the system for the given {@link Category}s.
+    * @param categories the {@link Category}s to send.
+    */
+   private void sendDigestMessagesAndWait( Category... categories ) {
+      for ( Category category : categories ) {
+         digest.log( category, Messages.simpleMessage( "any message" ) );
+      }
+      PlatformImpl.runAndWait( () -> {} );
+   }//End Method
+   
+   @Test public void shouldDisconnectFromSystemDigest(){
+      assertThat( systemUnderTest.getRows(), hasSize( 0 ) );
+      sendDigestMessagesAndWait( Categories.error() );
+      assertThat( systemUnderTest.getRows(), hasSize( 1 ) );
+      
+      systemUnderTest.disconnectFromSystemDigest();
+      sendDigestMessagesAndWait( Categories.information(), Categories.information() );
+      assertThat( systemUnderTest.getRows(), hasSize( 1 ) );
+   }//End Method
+   
+   @Test public void shouldResconnectToSystemDigest(){
+      assertThat( systemUnderTest.getRows(), hasSize( 0 ) );
+      systemUnderTest.disconnectFromSystemDigest();
+      sendDigestMessagesAndWait( Categories.information(), Categories.information() );
+      assertThat( systemUnderTest.getRows(), hasSize( 0 ) );
+      
+      systemUnderTest.connectToSystemDigest();
+      sendDigestMessagesAndWait( Categories.processingSequence(), Categories.processingSequence() );
+      assertThat( systemUnderTest.getRows(), hasSize( 2 ) );
    }//End Method
    
 }//End Class

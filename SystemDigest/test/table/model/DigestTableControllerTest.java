@@ -82,5 +82,38 @@ public class DigestTableControllerTest {
       assertThat( rows.get( 3 ).getMessage(), is( first ) );
       assertThat( rows.get( 4 ).getMessage(), is( message ) );
    }//End Method
+   
+   @Test public void shouldDisconnectFromDigest(){
+      objectDigest.log( category, message );
+      PlatformImpl.runAndWait( () -> {} );
+      assertThat( rows.size(), is( 1 ) );
+
+      systemUnderTest.disconnect();
+      
+      objectDigest.log( category, message );
+      objectDigest.log( category, message );
+      objectDigest.log( category, message );
+      PlatformImpl.runAndWait( () -> {} );
+      
+      assertThat( rows.size(), is( 1 ) );
+   }//End Method
+   
+   @Test public void shouldReconnectToDigest(){
+      systemUnderTest.disconnect();
+      
+      objectDigest.log( category, message );
+      objectDigest.log( category, message );
+      objectDigest.log( category, message );
+      PlatformImpl.runAndWait( () -> {} );
+      
+      assertThat( rows.size(), is( 0 ) );
+      
+      systemUnderTest.connect();
+      
+      objectDigest.log( category, message );
+      objectDigest.log( category, message );
+      PlatformImpl.runAndWait( () -> {} );
+      assertThat( rows.size(), is( 2 ) );
+   }//End Method
 
 }//End Class

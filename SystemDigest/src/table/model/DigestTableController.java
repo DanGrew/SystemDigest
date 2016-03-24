@@ -24,7 +24,8 @@ import core.source.Source;
  */
 public class DigestTableController implements DigestMessageReceiver {
 
-   private DigestTable digestTable;
+   private final DigestTable digestTable;
+   private final DigestMessageReceiver digestConnection;
    
    /**
     * Constructs a new {@link DigestTableController}.
@@ -32,8 +33,22 @@ public class DigestTableController implements DigestMessageReceiver {
     */
    DigestTableController( DigestTable digestTable ) {
       this.digestTable = digestTable;
-      new DigestMessageReceiverImpl( this );
+      digestConnection = new DigestMessageReceiverImpl( this );
    }//End Constructor
+   
+   /**
+    * {@inheritDoc}
+    */
+   @Override public void connect() {
+      digestConnection.connect();
+   }//End Method
+   
+   /**
+    * {@inheritDoc}
+    */
+   @Override public void disconnect() {
+      digestConnection.disconnect();
+   }//End Method
    
    /**
     * {@inheritDoc}
@@ -43,5 +58,5 @@ public class DigestTableController implements DigestMessageReceiver {
          digestTable.getRows().add( 0, new DigestTableRow( LocalTime.now(), source, category, message ) );
       } );
    }//End Method
-
+   
 }//End Class

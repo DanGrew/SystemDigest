@@ -26,7 +26,7 @@ public class DigestMessageReceiverImpl implements DigestMessageReceiver {
     */
    public DigestMessageReceiverImpl( DigestMessageReceiver actualReceiver ) {
       this.actualReceiver = actualReceiver;
-      DigestManager.getInstance().registerMessageReceiver( this );
+      connect();
    }//End Constructor
 
    /**
@@ -34,6 +34,20 @@ public class DigestMessageReceiverImpl implements DigestMessageReceiver {
     */
    @Override public void log( Source source, Category category, Message message ) {
       actualReceiver.log( source, category, message );
+   }//End Method
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override public void disconnect() {
+      DigestManager.getInstance().unregisterMessageReceiver( this );
+   }//End Method
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override public void connect() {
+      DigestManager.getInstance().registerMessageReceiver( this );
    }//End Method
 
 }//End Class

@@ -155,5 +155,17 @@ public class DigestManagerTest {
       verify( firstFilter, times( 0 ) ).matches( source, progress, message );
       verify( secondFilter, times( 1 ) ).matches( source, progress, message );
    }//End Method
+   
+   @Test public void shouldUnregisterMessageReceiver(){
+      systemUnderTest.registerMessageReceiver( messageReceiver );
+      systemUnderTest.log( source, category, message );
+      verify( messageReceiver, times( 1 ) ).log( source, category, message );
+      
+      systemUnderTest.unregisterMessageReceiver( messageReceiver );
+      
+      systemUnderTest.log( source, category, message );
+      systemUnderTest.log( source, category, message );
+      verify( messageReceiver, times( 1 ) ).log( source, category, message );
+   }//End Method
 
 }//End Class

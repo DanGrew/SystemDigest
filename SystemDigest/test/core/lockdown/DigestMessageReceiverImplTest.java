@@ -8,6 +8,7 @@
  */
 package core.lockdown;
 
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import org.junit.Before;
@@ -43,6 +44,37 @@ public class DigestMessageReceiverImplTest {
    @Test public void shouldReceiveLogMessagesFromManager() {
       DigestManager.getInstance().log( source, category, message );
       verify( actualReceiver ).log( source, category, message );
+   }//End Method
+   
+   @Test public void shouldDisconnectFromDigest(){
+      DigestManager.getInstance().log( source, category, message );
+      verify( actualReceiver, times( 1 ) ).log( source, category, message );
+      
+      systemUnderTest.disconnect();
+      
+      DigestManager.getInstance().log( source, category, message );
+      DigestManager.getInstance().log( source, category, message );
+      DigestManager.getInstance().log( source, category, message );
+      verify( actualReceiver, times( 1 ) ).log( source, category, message );
+   }//End Method
+   
+   @Test public void shouldReconnectToDigest(){
+      DigestManager.getInstance().log( source, category, message );
+      verify( actualReceiver, times( 1 ) ).log( source, category, message );
+      
+      systemUnderTest.disconnect();
+      
+      DigestManager.getInstance().log( source, category, message );
+      DigestManager.getInstance().log( source, category, message );
+      DigestManager.getInstance().log( source, category, message );
+      verify( actualReceiver, times( 1 ) ).log( source, category, message );
+      
+      systemUnderTest.connect();
+      
+      DigestManager.getInstance().log( source, category, message );
+      DigestManager.getInstance().log( source, category, message );
+      DigestManager.getInstance().log( source, category, message );
+      verify( actualReceiver, times( 4 ) ).log( source, category, message );
    }//End Method
    
 }//End Class

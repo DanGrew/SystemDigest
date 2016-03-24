@@ -27,13 +27,15 @@ public class DigestTable extends TableView< DigestTableRow > {
    static final String COLUMN_TITLE_CATEGORY = "Category";
    static final String COLUMN_TITLE_SOURCE = "Source";
    static final String COLUMN_TITLE_MESSAGE = "Message";
+   
+   private final DigestTableController controller;
 
    /**
     * Constructs a new {@link DigestTable}.
     */
    public DigestTable() {
       initialiseColumns();
-      new DigestTableController( this );
+      controller = new DigestTableController( this );
    }//End Constructor
    
    /**
@@ -72,6 +74,20 @@ public class DigestTable extends TableView< DigestTableRow > {
       messageColumn.setCellValueFactory( object -> new SimpleStringProperty( object.getValue().getMessage().getMessage() ) );
       messageColumn.setCellFactory( column -> { return new CategoryColouredCell< String >(); } );
       getColumns().add( messageColumn );
+   }//End Method
+
+   /**
+    * Method to disconnect the {@link DigestTable} from the system digest to stop all information being passed on.
+    */
+   void disconnectFromSystemDigest() {
+      controller.disconnect();
+   }//End Method
+
+   /**
+    * Method to connect the {@link DigestTable} to the system digest to receive information.
+    */
+   void connectToSystemDigest() {
+      controller.connect();
    }//End Method
    
 }//End Class
