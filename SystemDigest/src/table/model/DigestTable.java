@@ -79,14 +79,14 @@ public class DigestTable extends TableView< DigestTableRow > {
    /**
     * Method to disconnect the {@link DigestTable} from the system digest to stop all information being passed on.
     */
-   void disconnectFromSystemDigest() {
+   public void disconnectFromSystemDigest() {
       controller.disconnect();
    }//End Method
 
    /**
     * Method to connect the {@link DigestTable} to the system digest to receive information.
     */
-   void connectToSystemDigest() {
+   public void connectToSystemDigest() {
       controller.connect();
    }//End Method
    
