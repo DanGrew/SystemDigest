@@ -9,6 +9,7 @@
  package table.model;
 
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
@@ -32,6 +33,7 @@ import digest.object.ObjectDigestImpl;
 import graphics.launch.TestApplication;
 import javafx.scene.control.TableColumn;
 import javafx.scene.layout.BorderPane;
+import table.context.DigestTableContextMenuOpener;
 import table.presentation.CategoryColouredCell;
 
 /**
@@ -182,6 +184,10 @@ public class DigestTableTest {
       systemUnderTest.connectToSystemDigest();
       sendDigestMessagesAndWait( Categories.processingSequence(), Categories.processingSequence() );
       assertThat( systemUnderTest.getRows(), hasSize( 2 ) );
+   }//End Method
+   
+   @Test public void shouldProvideDigestTableContextMenu(){
+      assertThat( systemUnderTest.getOnContextMenuRequested(), instanceOf( DigestTableContextMenuOpener.class ) );
    }//End Method
    
 }//End Class

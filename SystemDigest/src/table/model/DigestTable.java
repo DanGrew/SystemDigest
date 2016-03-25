@@ -15,6 +15,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import table.context.DigestTableContextMenuOpener;
 import table.presentation.CategoryColouredCell;
 
 /**
@@ -36,6 +37,7 @@ public class DigestTable extends TableView< DigestTableRow > {
    public DigestTable() {
       initialiseColumns();
       controller = new DigestTableController( this );
+      setOnContextMenuRequested( new DigestTableContextMenuOpener( this ) );
    }//End Constructor
    
    /**
