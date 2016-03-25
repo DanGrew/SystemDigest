@@ -119,12 +119,7 @@ public class DigestTableControllerTest {
    }//End Method
    
    @Test public void shouldLimitRowSizeWhenRowLimitSet(){
-      for ( int i = 0; i < 600; i++ ) {
-         objectDigest.log( category, message );
-      }
-      
-      PlatformImpl.runAndWait( () -> {} );
-      assertThat( rows.size(), is( 600 ) );
+      digestSomeMessages( 600 );
       
       systemUnderTest.setTableRowLimit( DigestTableRowLimit.FiveHundred );
       PlatformImpl.runAndWait( () -> {} );
@@ -138,16 +133,24 @@ public class DigestTableControllerTest {
       PlatformImpl.runAndWait( () -> {} );
       assertThat( rows.size(), is( DigestTableRowLimit.OneHundred.getLimit() ) );
    }//End Method
-   
-   @Test public void shouldLimitRowSizeWhenRowAdded(){
-      systemUnderTest.setTableRowLimit( DigestTableRowLimit.FiveHundred );
-      
-      for ( int i = 0; i < 500; i++ ) {
+
+   /**
+    * Method to push some messages through the system to the {@link DigestTableController}.
+    * @param numberOfMessages the number of messages to send. These are waited for and asserted.
+    */
+   private void digestSomeMessages( int numberOfMessages ) {
+      for ( int i = 0; i < numberOfMessages; i++ ) {
          objectDigest.log( category, message );
       }
       
       PlatformImpl.runAndWait( () -> {} );
-      assertThat( rows.size(), is( 500 ) );
+      assertThat( rows.size(), is( numberOfMessages ) );
+   }//End Method
+   
+   @Test public void shouldLimitRowSizeWhenRowAdded(){
+      systemUnderTest.setTableRowLimit( DigestTableRowLimit.FiveHundred );
+      
+      digestSomeMessages( 500 );
       
       final String newestMessage = "something specifically new";
       objectDigest.log( category, Messages.simpleMessage( newestMessage ) );
@@ -163,12 +166,18 @@ public class DigestTableControllerTest {
       systemUnderTest.setTableRowLimit( DigestTableRowLimit.OneHundred );
       systemUnderTest.setTableRowLimit( null );
       
-      for ( int i = 0; i < 101; i++ ) {
-         objectDigest.log( category, message );
-      }
+      digestSomeMessages( 101 );
+   }//End Method
+   
+   @Test public void shouldClearTable(){
+      digestSomeMessages( 5 );
+      
+      systemUnderTest.clearTable();
       
       PlatformImpl.runAndWait( () -> {} );
-      assertThat( rows.size(), is( 101 ) );
+      assertThat( rows.size(), is( 0 ) );
+      
+      digestSomeMessages( 10 );
    }//End Method
 
 }//End Class

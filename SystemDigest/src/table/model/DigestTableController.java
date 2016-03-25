@@ -73,6 +73,15 @@ public class DigestTableController implements DigestMessageReceiver {
    }//End Method
    
    /**
+    * Method to clear the {@link DigestTable}.
+    */
+   public void clearTable() {
+      PlatformImpl.runLater( () -> {
+         digestTable.getRows().clear();
+      } );
+   }//End Method
+   
+   /**
     * {@inheritDoc}
     */
    @Override public void log( Source source, Category category, Message message ) {
