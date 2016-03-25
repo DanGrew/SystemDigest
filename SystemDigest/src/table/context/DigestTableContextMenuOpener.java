@@ -11,6 +11,7 @@ package table.context;
 import javafx.event.EventHandler;
 import javafx.scene.input.ContextMenuEvent;
 import table.model.DigestTable;
+import table.model.DigestTableController;
 
 /**
  * {@link DigestTableContextMenuOpener} provides an {@link EventHandler} to control
@@ -23,11 +24,12 @@ public class DigestTableContextMenuOpener implements EventHandler< ContextMenuEv
    
    /**
     * Constructs a new {@link DigestTableContextMenuOpener}.
-    * @param display the {@link DigestTable} the {@link DigestTableContextMenu}
+    * @param table the {@link DigestTable} the {@link DigestTableContextMenu}
     * is for.
+    * @param controller the {@link DigestTableController} to send instructions to.
     */
-   public DigestTableContextMenuOpener( DigestTable table ) {
-      this( table, new DigestTableContextMenu( table ) );
+   public DigestTableContextMenuOpener( DigestTable table, DigestTableController controller ) {
+      this( table, new DigestTableContextMenu( controller ) );
    }//End Constructor
    
    /**

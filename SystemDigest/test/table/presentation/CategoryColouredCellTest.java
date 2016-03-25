@@ -68,5 +68,16 @@ public class CategoryColouredCellTest {
       assertThat( systemUnderTest.getText(), is( value ) );
       assertThat( systemUnderTest.getTextFill(), is( Categories.objectAllocation().getColour() ) );
    }//End Method
+   
+   @Test public void shouldAcceptNullItem(){
+      tableRow.setItem( row );
+      when( row.getCategory() ).thenReturn( Categories.objectAllocation() );
+      
+      systemUnderTest.updateTableRow( tableRow );
+      systemUnderTest.setText( "anything" );
+      
+      systemUnderTest.updateItem( null, false );
+      assertThat( systemUnderTest.getText(), nullValue() );
+   }//End Method
 
 }//End Class

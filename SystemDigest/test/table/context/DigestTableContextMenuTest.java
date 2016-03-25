@@ -34,6 +34,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.input.ContextMenuEvent;
 import table.model.DigestTable;
+import table.model.DigestTableController;
 import table.model.DigestTableRow;
 
 /**
@@ -46,7 +47,8 @@ public class DigestTableContextMenuTest {
    private static final int FIRST_SEPARATOR = 1;
    private static final int CANCEL = 2;
    
-   @Mock private DigestTable table;
+   private DigestTable fullyLaunchedTable;
+   @Mock private DigestTableController controller;
    private DigestTableContextMenu systemUnderTest;
    private DigestTableContextMenuOpener opener;
    
@@ -56,7 +58,7 @@ public class DigestTableContextMenuTest {
    
    @Before public void initialiseSystemUnderTest(){
       MockitoAnnotations.initMocks( this );;
-      systemUnderTest = new DigestTableContextMenu( table );
+      systemUnderTest = new DigestTableContextMenu( controller );
    }//End Method
 
    @Ignore
@@ -71,13 +73,13 @@ public class DigestTableContextMenuTest {
     */
    private void fullLaunch() throws InterruptedException{
       TestApplication.launch( () -> {
-         table = new DigestTable();
+         fullyLaunchedTable = new DigestTable();
          for ( int i = 0; i < 1000; i++ ) {
-            table.getRows().add( new DigestTableRow( LocalTime.now(), new SourceImpl( this ), Categories.error(), Messages.simpleMessage( "sd" ) ) );
+            fullyLaunchedTable.getRows().add( new DigestTableRow( LocalTime.now(), new SourceImpl( this ), Categories.error(), Messages.simpleMessage( "sd" ) ) );
          }
-         opener = new DigestTableContextMenuOpener( table, systemUnderTest );
-         table.setOnContextMenuRequested( opener );
-         return table; 
+         opener = new DigestTableContextMenuOpener( fullyLaunchedTable, systemUnderTest );
+         fullyLaunchedTable.setOnContextMenuRequested( opener );
+         return fullyLaunchedTable; 
       } );
    }//End Method
    
@@ -101,11 +103,11 @@ public class DigestTableContextMenuTest {
       MenuItem controConnection = retrieveMenuItem( CONNECTION );
       
       controConnection.getOnAction().handle( new ActionEvent() );
-      verify( table ).disconnectFromSystemDigest();
+      verify( controller ).disconnect();
       assertThat( controConnection.getText(), is( DigestTableContextMenu.CONNECT ) );
       
       controConnection.getOnAction().handle( new ActionEvent() );
-      verify( table ).connectToSystemDigest();
+      verify( controller ).connect();
       assertThat( controConnection.getText(), is( DigestTableContextMenu.DISCONNECT ) );
    }//End Method
    

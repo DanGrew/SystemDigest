@@ -12,7 +12,7 @@ import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
-import table.model.DigestTable;
+import table.model.DigestTableController;
 
 /**
  * The {@link DigestTableContextMenu} provides a {@link ContextMenu} that allows
@@ -26,11 +26,11 @@ public class DigestTableContextMenu extends ContextMenu {
 
    /**
     * Constructs a new {@link DigestTableContextMenu}.
-    * @param table the {@link DigestTable} to control. 
+    * @param table the {@link DigestTableController} to send instructions to. 
     */
-   DigestTableContextMenu( DigestTable table ) {
+   DigestTableContextMenu( DigestTableController controller ) {
       MenuItem connectionControl = new MenuItem( DISCONNECT );
-      connectionControl.setOnAction( event -> controlConnection( table, connectionControl ) );
+      connectionControl.setOnAction( event -> controlConnection( controller, connectionControl ) );
       
       MenuItem cancel = new MenuItem( CANCEL );
       cancel.setOnAction( event -> hide() );
@@ -46,15 +46,15 @@ public class DigestTableContextMenu extends ContextMenu {
 
    /**
     * Method to control the connection to the system digest.
-    * @param table the {@link DigestTable} to change.
+    * @param table the {@link DigestTableController} to send instructions to.
     * @param connectionControl the {@link MenuItem} to update.
     */
-   private void controlConnection( DigestTable table, MenuItem connectionControl ) {
+   private void controlConnection( DigestTableController controller, MenuItem connectionControl ) {
       if ( connectionControl.getText() == CONNECT ) {
-         table.connectToSystemDigest();
+         controller.connect();
          connectionControl.setText( DISCONNECT );
       } else {
-         table.disconnectFromSystemDigest();
+         controller.disconnect();
          connectionControl.setText( CONNECT );
       }
    }//End Method

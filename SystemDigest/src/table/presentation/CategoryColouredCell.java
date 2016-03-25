@@ -27,7 +27,7 @@ public class CategoryColouredCell< DataTypeT > extends TableCell< DigestTableRow
       @SuppressWarnings("unchecked") // This is actually an unchecked due to raw types in JavaFx.
       TableRow< DigestTableRow > row = ( TableRow< DigestTableRow > ) getTableRow();
 
-      if ( row != null && row.getItem() != null ) {
+      if ( item !=null && row != null && row.getItem() != null ) {
          setText( item.toString() );
          setTextFill( row.getItem().getCategory().getColour() );
       } else {

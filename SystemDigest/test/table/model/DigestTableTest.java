@@ -165,27 +165,6 @@ public class DigestTableTest {
       PlatformImpl.runAndWait( () -> {} );
    }//End Method
    
-   @Test public void shouldDisconnectFromSystemDigest(){
-      assertThat( systemUnderTest.getRows(), hasSize( 0 ) );
-      sendDigestMessagesAndWait( Categories.error() );
-      assertThat( systemUnderTest.getRows(), hasSize( 1 ) );
-      
-      systemUnderTest.disconnectFromSystemDigest();
-      sendDigestMessagesAndWait( Categories.information(), Categories.information() );
-      assertThat( systemUnderTest.getRows(), hasSize( 1 ) );
-   }//End Method
-   
-   @Test public void shouldResconnectToSystemDigest(){
-      assertThat( systemUnderTest.getRows(), hasSize( 0 ) );
-      systemUnderTest.disconnectFromSystemDigest();
-      sendDigestMessagesAndWait( Categories.information(), Categories.information() );
-      assertThat( systemUnderTest.getRows(), hasSize( 0 ) );
-      
-      systemUnderTest.connectToSystemDigest();
-      sendDigestMessagesAndWait( Categories.processingSequence(), Categories.processingSequence() );
-      assertThat( systemUnderTest.getRows(), hasSize( 2 ) );
-   }//End Method
-   
    @Test public void shouldProvideDigestTableContextMenu(){
       assertThat( systemUnderTest.getOnContextMenuRequested(), instanceOf( DigestTableContextMenuOpener.class ) );
    }//End Method

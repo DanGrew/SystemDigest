@@ -37,7 +37,7 @@ public class DigestTable extends TableView< DigestTableRow > {
    public DigestTable() {
       initialiseColumns();
       controller = new DigestTableController( this );
-      setOnContextMenuRequested( new DigestTableContextMenuOpener( this ) );
+      setOnContextMenuRequested( new DigestTableContextMenuOpener( this, controller ) );
    }//End Constructor
    
    /**
@@ -78,18 +78,4 @@ public class DigestTable extends TableView< DigestTableRow > {
       getColumns().add( messageColumn );
    }//End Method
 
-   /**
-    * Method to disconnect the {@link DigestTable} from the system digest to stop all information being passed on.
-    */
-   public void disconnectFromSystemDigest() {
-      controller.disconnect();
-   }//End Method
-
-   /**
-    * Method to connect the {@link DigestTable} to the system digest to receive information.
-    */
-   public void connectToSystemDigest() {
-      controller.connect();
-   }//End Method
-   
 }//End Class
