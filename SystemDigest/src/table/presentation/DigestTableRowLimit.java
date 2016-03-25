@@ -44,7 +44,7 @@ public enum DigestTableRowLimit {
     * Getter for the max number of rows.
     * @return the limit, can be null for unlimited.
     */
-   Integer getLimit(){
+   public Integer getLimit(){
       return limit;
    }//End Method
    

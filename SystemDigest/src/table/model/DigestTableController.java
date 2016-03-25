@@ -17,6 +17,7 @@ import core.lockdown.DigestMessageReceiver;
 import core.lockdown.DigestMessageReceiverImpl;
 import core.message.Message;
 import core.source.Source;
+import table.presentation.DigestTableRowLimit;
 
 /**
  * The {@link DigestTableController} is responsible for receiving information from the digest
@@ -26,6 +27,7 @@ public class DigestTableController implements DigestMessageReceiver {
 
    private final DigestTable digestTable;
    private final DigestMessageReceiver digestConnection;
+   private DigestTableRowLimit rowLimit;
    
    /**
     * Constructs a new {@link DigestTableController}.
@@ -33,7 +35,8 @@ public class DigestTableController implements DigestMessageReceiver {
     */
    DigestTableController( DigestTable digestTable ) {
       this.digestTable = digestTable;
-      digestConnection = new DigestMessageReceiverImpl( this );
+      this.digestConnection = new DigestMessageReceiverImpl( this );
+      this.rowLimit = DigestTableRowLimit.Unlimited;
    }//End Constructor
    
    /**
@@ -51,11 +54,31 @@ public class DigestTableController implements DigestMessageReceiver {
    }//End Method
    
    /**
+    * Method to set the {@link DigestTableRowLimit} to use.
+    * @param limit the {@link DigestTableRowLimit} to set. This immediately applies to the
+    * the {@link DigestTable}. Null is acceptable, but will default to {@link DigestTableRowLimit#Unlimited}.
+    */
+   void setTableRowLimit( DigestTableRowLimit limit ) {
+      if ( limit == null ) {
+         this.rowLimit = DigestTableRowLimit.Unlimited;
+         return;
+      }
+      
+      if ( limit != this.rowLimit ) {
+         PlatformImpl.runLater( () -> {
+            limit.limit( digestTable.getRows() );
+         } );
+      }
+      this.rowLimit = limit;
+   }//End Method
+   
+   /**
     * {@inheritDoc}
     */
    @Override public void log( Source source, Category category, Message message ) {
       PlatformImpl.runLater( () -> {
          digestTable.getRows().add( 0, new DigestTableRow( LocalTime.now(), source, category, message ) );
+         rowLimit.limit( digestTable.getRows() );
       } );
    }//End Method
    

@@ -22,11 +22,13 @@ import com.sun.javafx.application.PlatformImpl;
 
 import core.category.Category;
 import core.message.Message;
+import core.message.Messages;
 import core.source.SourceImpl;
 import digest.object.ObjectDigest;
 import digest.object.ObjectDigestImpl;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import table.presentation.DigestTableRowLimit;
 
 /**
  * {@link DigestTableController} test.
@@ -114,6 +116,59 @@ public class DigestTableControllerTest {
       objectDigest.log( category, message );
       PlatformImpl.runAndWait( () -> {} );
       assertThat( rows.size(), is( 2 ) );
+   }//End Method
+   
+   @Test public void shouldLimitRowSizeWhenRowLimitSet(){
+      for ( int i = 0; i < 600; i++ ) {
+         objectDigest.log( category, message );
+      }
+      
+      PlatformImpl.runAndWait( () -> {} );
+      assertThat( rows.size(), is( 600 ) );
+      
+      systemUnderTest.setTableRowLimit( DigestTableRowLimit.FiveHundred );
+      PlatformImpl.runAndWait( () -> {} );
+      assertThat( rows.size(), is( DigestTableRowLimit.FiveHundred.getLimit() ) );
+      
+      systemUnderTest.setTableRowLimit( DigestTableRowLimit.OneHundred );
+      PlatformImpl.runAndWait( () -> {} );
+      assertThat( rows.size(), is( DigestTableRowLimit.OneHundred.getLimit() ) );
+      
+      systemUnderTest.setTableRowLimit( DigestTableRowLimit.TenThousand );
+      PlatformImpl.runAndWait( () -> {} );
+      assertThat( rows.size(), is( DigestTableRowLimit.OneHundred.getLimit() ) );
+   }//End Method
+   
+   @Test public void shouldLimitRowSizeWhenRowAdded(){
+      systemUnderTest.setTableRowLimit( DigestTableRowLimit.FiveHundred );
+      
+      for ( int i = 0; i < 500; i++ ) {
+         objectDigest.log( category, message );
+      }
+      
+      PlatformImpl.runAndWait( () -> {} );
+      assertThat( rows.size(), is( 500 ) );
+      
+      final String newestMessage = "something specifically new";
+      objectDigest.log( category, Messages.simpleMessage( newestMessage ) );
+      
+      PlatformImpl.runAndWait( () -> {} );
+      assertThat( rows.size(), is( DigestTableRowLimit.FiveHundred.getLimit() ) );
+      
+      assertThat( rows.size(), is( 500 ) );
+      assertThat( rows.get( 0 ).getMessage().getMessage(), is( newestMessage ) );
+   }//End Method
+   
+   @Test public void shouldNotAcceptNullRowLimitAndDefaultToUnlimited(){
+      systemUnderTest.setTableRowLimit( DigestTableRowLimit.OneHundred );
+      systemUnderTest.setTableRowLimit( null );
+      
+      for ( int i = 0; i < 101; i++ ) {
+         objectDigest.log( category, message );
+      }
+      
+      PlatformImpl.runAndWait( () -> {} );
+      assertThat( rows.size(), is( 101 ) );
    }//End Method
 
 }//End Class
