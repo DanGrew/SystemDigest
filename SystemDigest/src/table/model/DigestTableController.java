@@ -58,7 +58,7 @@ public class DigestTableController implements DigestMessageReceiver {
     * @param limit the {@link DigestTableRowLimit} to set. This immediately applies to the
     * the {@link DigestTable}. Null is acceptable, but will default to {@link DigestTableRowLimit#Unlimited}.
     */
-   void setTableRowLimit( DigestTableRowLimit limit ) {
+   public void setTableRowLimit( DigestTableRowLimit limit ) {
       if ( limit == null ) {
          this.rowLimit = DigestTableRowLimit.Unlimited;
          return;
