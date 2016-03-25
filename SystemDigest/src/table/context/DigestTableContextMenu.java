@@ -27,6 +27,7 @@ public class DigestTableContextMenu extends ContextMenu {
    static final String DISCONNECT = "Disconnect from Digest";
    static final String CONNECT = "Connect to Digest";
    static final String TABLE_LIMIT = "Table limit";
+   static final String CLEAR_TABLE = "Clear Table";
    static final String CANCEL = "Cancel";
    
    private final DigestTableController controller;
@@ -43,12 +44,16 @@ public class DigestTableContextMenu extends ContextMenu {
       
       Menu rowLimits = constructRowLimitItems();
       
+      MenuItem clearTable = new MenuItem( CLEAR_TABLE );
+      clearTable.setOnAction( event -> controller.clearTable() );
+      
       MenuItem cancel = new MenuItem( CANCEL );
       cancel.setOnAction( event -> hide() );
       
       getItems().addAll( 
             connectionControl,
             rowLimits,
+            clearTable,
             new SeparatorMenuItem(),
             cancel
       );

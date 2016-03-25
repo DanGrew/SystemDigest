@@ -50,8 +50,9 @@ public class DigestTableContextMenuTest {
    //Note that these are not object requirements, but useful for the test.
    private static final int CONNECTION = 0;
    private static final int TABLE_LIMIT = 1;
-   private static final int FIRST_SEPARATOR = 2;
-   private static final int CANCEL = 3;
+   private static final int CLEAR_TABLE = 2;
+   private static final int FIRST_SEPARATOR = 3;
+   private static final int CANCEL = 4;
    
    private DigestTable fullyLaunchedTable;
    @Mock private DigestTableController controller;
@@ -92,9 +93,10 @@ public class DigestTableContextMenuTest {
    @Test public void shouldContainMenusInOrder(){
       assertThat( retrieveMenuItem( CONNECTION ).getText(), is( DigestTableContextMenu.DISCONNECT ) );
       assertThat( retrieveMenuItem( TABLE_LIMIT ).getText(), is( DigestTableContextMenu.TABLE_LIMIT ) );
+      assertThat( retrieveMenuItem( CLEAR_TABLE ).getText(), is( DigestTableContextMenu.CLEAR_TABLE ) );
       assertThat( retrieveMenuItem( FIRST_SEPARATOR ), instanceOf( SeparatorMenuItem.class ) );
       assertThat( retrieveMenuItem( CANCEL ).getText(), is( DigestTableContextMenu.CANCEL ) );
-      assertThat( systemUnderTest.getItems(), hasSize( 4 ) );
+      assertThat( systemUnderTest.getItems(), hasSize( 5 ) );
    }//End Method
    
    /**
@@ -182,6 +184,12 @@ public class DigestTableContextMenuTest {
          limitItem.getOnAction().handle( new ActionEvent() );
          verify( controller ).setTableRowLimit( limit );
       }
+   }//End Method
+   
+   @Test public void shouldClearTable(){
+      MenuItem clearTable = retrieveMenuItem( CLEAR_TABLE );
+      clearTable.getOnAction().handle( new ActionEvent() );
+      verify( controller ).clearTable();
    }//End Method
 
 }//End Class
