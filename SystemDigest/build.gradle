@@ -5,7 +5,8 @@ apply plugin: 'eclipse'
 def versionDelimiter = '.'
 def majorRelease = 1
 def minorRelease = 1
-def continuousBuildNumber = ( System.getenv()['BUILD_NUMBER'] != null ?: 'WORKSPACE' ) 
+def systemBuildNumber = System.getenv()['BUILD_NUMBER']
+def continuousBuildNumber = ( systemBuildNumber != null ? systemBuildNumber : 'WORKSPACE' ) 
 
 group = 'SystemDigest'
 version = majorRelease + versionDelimiter + minorRelease + versionDelimiter + continuousBuildNumber
