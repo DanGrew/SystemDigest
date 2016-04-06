@@ -1,31 +1,23 @@
+//apply all plugins needed for the build
 apply plugin: 'java'
 apply plugin: 'maven'
+apply plugin: 'maven-publish'
 apply plugin: 'eclipse'
+
+//describe build and calculate build number
+description = """SystemDigest"""
+group = 'SystemDigest'
 
 def versionDelimiter = '.'
 def majorRelease = 1
 def minorRelease = 1
-def systemBuildNumber = System.getenv()['BUILD_NUMBER']
+def systemBuildNumber = System.getenv()[ 'BUILD_NUMBER' ]
 def continuousBuildNumber = ( systemBuildNumber != null ? systemBuildNumber : 'WORKSPACE' ) 
-
-group = 'SystemDigest'
 version = majorRelease + versionDelimiter + minorRelease + versionDelimiter + continuousBuildNumber
 
-description = """SystemDigest"""
-
+//source specific configuration
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
-
-repositories {
-     maven { url "http://repo.maven.apache.org/maven2" } 
-}
-
-dependencies {
-    testCompile group: 'junit', name: 'junit', version:'4.12'
-    testCompile group: 'pl.pragmatists', name: 'JUnitParams', version:'0.3.6'
-    testCompile group: 'org.hamcrest', name: 'hamcrest-all', version:'1.3'
-    testCompile group: 'org.mockito', name: 'mockito-all', version:'1.9.5'
-}
 
 sourceSets {
     main {
@@ -40,15 +32,42 @@ sourceSets {
     }
 }
 
+//define repo for resolving dependencies, and the dependencies themselves
+repositories {
+     maven { url "http://repo.maven.apache.org/maven2" } 
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version:'4.12'
+    testCompile group: 'pl.pragmatists', name: 'JUnitParams', version:'0.3.6'
+    testCompile group: 'org.hamcrest', name: 'hamcrest-all', version:'1.3'
+    testCompile group: 'org.mockito', name: 'mockito-all', version:'1.9.5'
+}
+
+//provide output when running unit tests
 test {
     testLogging {
         events "passed", "skipped", "failed", "standardOut", "standardError"
     }
 }
 
-//packaging tests
+//package tests into a separate jar
 task packageTests(type: Jar) {
   from sourceSets.test.output
   classifier = 'tests'
 }
 artifacts.archives packageTests
+
+//define where and how the artifacts should be published
+uploadArchives {
+	repositories.mavenDeployer {
+		repository( url: 'http://192.168.0.15:14445/repository/system-digest/' ) {
+			authentication ( userName: repoUser, password: repoPass )
+		}
+		
+		pom.version = version
+		pom.artifactId = 'SystemDigest'
+		pom.groupId = 'SystemDigest'
+	}
+}	
+
