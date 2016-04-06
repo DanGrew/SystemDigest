@@ -8,12 +8,9 @@ apply plugin: 'eclipse'
 description = """SystemDigest"""
 group = 'SystemDigest'
 
-def versionDelimiter = '.'
-def majorRelease = 1
-def minorRelease = 1
-def systemBuildNumber = System.getenv()[ 'BUILD_NUMBER' ]
-def continuousBuildNumber = ( systemBuildNumber != null ? systemBuildNumber : 'WORKSPACE' ) 
-version = majorRelease + versionDelimiter + minorRelease + versionDelimiter + continuousBuildNumber
+def buildNumberFromEnvironment = System.getenv()[ 'VERSION_NUMBER' ]
+def buildNumberForThisEnvironment = ( buildNumberFromEnvironment != null ? buildNumberFromEnvironment : 'WORKSPACE' ) 
+version = buildNumberFromEnvironment
 
 //source specific configuration
 sourceCompatibility = 1.8
