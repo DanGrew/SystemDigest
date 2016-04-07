@@ -1,8 +1,14 @@
-//apply all plugins needed for the build
-apply plugin: 'java'
-apply plugin: 'maven'
-apply plugin: 'maven-publish'
-apply plugin: 'eclipse'
+plugins {
+    id "com.jfrog.bintray" version "1.6"
+}
+
+allprojects { 
+	//apply all plugins needed for the build
+	apply plugin: 'java'
+	apply plugin: 'maven'
+	apply plugin: 'maven-publish'
+	apply plugin: 'eclipse'
+}
 
 //describe build and calculate build number
 description = """SystemDigest"""
@@ -10,7 +16,7 @@ group = 'SystemDigest'
 
 def buildNumberFromEnvironment = System.getenv()[ 'VERSION_NUMBER' ]
 def buildNumberForThisEnvironment = ( buildNumberFromEnvironment != null ? buildNumberFromEnvironment : 'WORKSPACE' ) 
-version = buildNumberFromEnvironment
+version = buildNumberForThisEnvironment
 
 //source specific configuration
 sourceCompatibility = 1.8
@@ -71,4 +77,36 @@ uploadArchives {
 		pom.groupId = 'SystemDigest'
 	}
 }	
+
+//publish release candidates to bintray
+bintray {
+    user = bintrayUser
+    key = bintrayKey
+    configurations = ['archives']
+    publications = ['MyPublication'] 
+    pkg {
+        repo = 'SystemDigest'
+        name = 'SystemDigest'
+        userOrg = bintrayUser
+        licenses = ['Apache-2.0']
+        vcsUrl = 'https://github.com/DanGrew/SystemDigest.git'
+        
+        version {
+                name = buildNumberForThisEnvironment
+                desc = 'Continuous Delivery rolling version'
+                released  = new Date()
+        }
+    }
+}
+
+publishing {
+    publications {
+        MyPublication(MavenPublication) {
+            from components.java
+            groupId 'SystemDigest'
+            artifactId 'SystemDigest'
+            version version
+        }
+    }
+}
 
