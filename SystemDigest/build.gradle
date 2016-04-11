@@ -100,6 +100,9 @@ bintray {
     key = bintrayKey
     configurations = ['archives']
     publications = ['MyPublication'] 
+    
+    publish = true //auto publish everything
+    
     pkg {
         repo = 'SystemDigest'
         name = 'SystemDigest'
