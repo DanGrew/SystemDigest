@@ -8,6 +8,7 @@
  */
 package core.lockdown;
 
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -56,8 +57,8 @@ public class DigestManager {
     * Constructs a new {@link DigestManager}.
     */
    DigestManager() {
-      messageReceivers = new LinkedHashMap<>();
-      progressReceivers = new LinkedHashMap<>();
+      messageReceivers = Collections.synchronizedMap( new LinkedHashMap<>() );
+      progressReceivers = Collections.synchronizedMap( new LinkedHashMap<>() );
    }//End Constructor
 
    /**

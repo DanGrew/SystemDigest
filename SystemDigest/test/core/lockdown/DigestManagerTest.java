@@ -15,6 +15,8 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.concurrent.CountDownLatch;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -33,6 +35,7 @@ import core.source.Source;
  */
 public class DigestManagerTest {
 
+   private static final int CONCURRENCY_ITERATIONS = 100;
    @Mock private Source source;
    @Mock private Category category;
    @Mock private Progress progress;
@@ -166,6 +169,46 @@ public class DigestManagerTest {
       systemUnderTest.log( source, category, message );
       systemUnderTest.log( source, category, message );
       verify( messageReceiver, times( 1 ) ).log( source, category, message );
+   }//End Method
+   
+   @Test public void logShouldNotBreakWithConcurrentAccess() throws InterruptedException{
+      CountDownLatch latch = new CountDownLatch( 2 );
+      
+      new Thread( () -> {
+         for ( int i = 0; i < CONCURRENCY_ITERATIONS; i++ ) {
+            systemUnderTest.log( source, category, message );
+         }
+         latch.countDown();
+      } ).start();
+      
+      new Thread( () -> {
+         for ( int i = 0; i < CONCURRENCY_ITERATIONS; i++ ) {
+            systemUnderTest.registerMessageReceiver( mock( DigestMessageReceiver.class ) );
+         }
+         latch.countDown();
+      } ).start();
+      
+      latch.await();
+   }//End Method
+   
+   @Test public void progressShouldNotBreakWithConcurrentAccess() throws InterruptedException{
+      CountDownLatch latch = new CountDownLatch( 2 );
+      
+      new Thread( () -> {
+         for ( int i = 0; i < CONCURRENCY_ITERATIONS; i++ ) {
+            systemUnderTest.progress( source, progress, message );
+         }
+         latch.countDown();
+      } ).start();
+      
+      new Thread( () -> {
+         for ( int i = 0; i < CONCURRENCY_ITERATIONS; i++ ) {
+            systemUnderTest.registerProgressReceiver( mock( DigestProgressReceiver.class ) );
+         }
+         latch.countDown();
+      } ).start();
+      
+      latch.await();
    }//End Method
 
 }//End Class

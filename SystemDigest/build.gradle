@@ -1,16 +1,20 @@
+/*
+ * PLUGINS: apply all plugins needed for the build
+ */
 plugins {
     id "com.jfrog.bintray" version "1.6"
 }
 
 allprojects { 
-	//apply all plugins needed for the build
 	apply plugin: 'java'
 	apply plugin: 'maven'
 	apply plugin: 'maven-publish'
 	apply plugin: 'eclipse'
 }
 
-//describe build and calculate build number
+/*
+ * VERSIONING: describe build and calculate build number
+ */
 description = """SystemDigest"""
 group = 'SystemDigest'
 
@@ -18,7 +22,9 @@ def buildNumberFromEnvironment = System.getenv()[ 'VERSION_NUMBER' ]
 def buildNumberForThisEnvironment = ( buildNumberFromEnvironment != null ? buildNumberFromEnvironment : 'WORKSPACE' ) 
 version = buildNumberForThisEnvironment
 
-//source specific configuration
+/*
+ * SOURCE: source specific configuration
+ */
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
@@ -35,7 +41,9 @@ sourceSets {
     }
 }
 
-//define repo for resolving dependencies, and the dependencies themselves
+/*
+ * DEPENDENCIES: define repo for resolving dependencies, and the dependencies themselves
+ */
 repositories {
      maven { url "http://repo.maven.apache.org/maven2" } 
 }
@@ -47,7 +55,9 @@ dependencies {
     testCompile group: 'org.mockito', name: 'mockito-all', version:'1.9.5'
 }
 
-//provide output when running unit tests
+/*
+ * TESTS: provide output when running unit tests
+ */
 test {
     testLogging {
         events "passed", "skipped", "failed", "standardOut", "standardError"
@@ -58,14 +68,18 @@ test {
     }
 }
 
-//package tests into a separate jar
+/*
+ * TEST PACKAGING: package tests into a separate jar
+ */
 task packageTests(type: Jar) {
   from sourceSets.test.output
   classifier = 'tests'
 }
 artifacts.archives packageTests
 
-//define where and how the artifacts should be published
+/*
+ * LOCAL ARCHIVING: define where and how the artifacts should be published
+ */
 uploadArchives {
 	repositories.mavenDeployer {
 		repository( url: 'http://192.168.0.15:14445/repository/system-digest/' ) {
@@ -78,7 +92,9 @@ uploadArchives {
 	}
 }	
 
-//publish release candidates to bintray
+/*
+ * REMOTE ARCHIVING: publish release candidates to bintray
+ */
 bintray {
     user = bintrayUser
     key = bintrayKey
