@@ -30,4 +30,38 @@ public class MessageImpl implements Message {
       return messageText;
    }//End Method
 
+   /**
+    * {@inheritDoc}
+    */
+   @Override public int hashCode() {
+      final int prime = 31;
+      int result = 1;
+      result = prime * result + ( ( messageText == null ) ? 0 : messageText.hashCode() );
+      return result;
+   }//End Method
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override public boolean equals( Object obj ) {
+      if ( this == obj ) {
+         return true;
+      }
+      if ( obj == null ) {
+         return false;
+      }
+      if ( !( obj instanceof MessageImpl ) ) {
+         return false;
+      }
+      MessageImpl other = ( MessageImpl ) obj;
+      if ( messageText == null ) {
+         if ( other.messageText != null ) {
+            return false;
+         }
+      } else if ( !messageText.equals( other.messageText ) ) {
+         return false;
+      }
+      return true;
+   }//End Method
+   
 }//End Class
