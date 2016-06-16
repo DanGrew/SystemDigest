@@ -8,17 +8,22 @@
  */
 package uk.dangrew.sd.core.lockdown;
 
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.time.LocalDateTime;
 import java.util.concurrent.CountDownLatch;
+import java.util.function.Supplier;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
@@ -39,17 +44,25 @@ import uk.dangrew.sd.core.source.Source;
 public class DigestManagerTest {
 
    private static final int CONCURRENCY_ITERATIONS = 100;
+   
+   private LocalDateTime timestamp;
    @Mock private Source source;
    @Mock private Category category;
    @Mock private Progress progress;
    @Mock private Message message;
+   
+   private Supplier< LocalDateTime > timestampProvider;
    @Mock private DigestMessageReceiver messageReceiver;
    @Mock private DigestProgressReceiver progressReceiver;
+   
    private DigestManager systemUnderTest;
    
    @Before public void initialiseSystemUnderTest(){
       MockitoAnnotations.initMocks( this );
-      DigestManager.setInstance( new DigestManager() );
+      timestamp = LocalDateTime.now();
+      timestampProvider = () -> timestamp;
+      
+      DigestManager.setInstance( new DigestManager( timestampProvider ) );
       systemUnderTest = DigestManager.getInstance(); 
       assertThat( systemUnderTest, notNullValue() );
    }//End Method
@@ -61,7 +74,7 @@ public class DigestManagerTest {
    @Test public void shouldForwardLogMessagesOnToReceivers() {
       systemUnderTest.registerMessageReceiver( messageReceiver );
       systemUnderTest.log( source, category, message );
-      verify( messageReceiver ).log( source, category, message );
+      verify( messageReceiver ).log( timestamp, source, category, message );
    }//End Method
    
    @Test public void shouldForwardLogMessageOnToMultipleReceivers() {
@@ -70,8 +83,8 @@ public class DigestManagerTest {
       systemUnderTest.registerMessageReceiver( anotherConnector );
       
       systemUnderTest.log( source, category, message );
-      verify( messageReceiver ).log( source, category, message );
-      verify( anotherConnector ).log( source, category, message );
+      verify( messageReceiver ).log( timestamp, source, category, message );
+      verify( anotherConnector ).log( timestamp, source, category, message );
    }//End Method
    
    @Test public void shouldNotForwardProgressOnWhenNoReceivers() {
@@ -100,7 +113,7 @@ public class DigestManagerTest {
       systemUnderTest.registerMessageReceiver( messageReceiver );
       systemUnderTest.registerMessageReceiver( messageReceiver );
       systemUnderTest.log( source, category, message );
-      verify( messageReceiver, times( 1 ) ).log( source, category, message );
+      verify( messageReceiver, times( 1 ) ).log( timestamp, source, category, message );
    }//End Method
    
    @Test public void shouldNotRegisterSameProgressReceiverMultipleTimes(){
@@ -119,10 +132,10 @@ public class DigestManagerTest {
       systemUnderTest.registerMessageReceiver( messageReceiver, filter );
       
       systemUnderTest.log( source, category, message );
-      verify( messageReceiver, times( 0 ) ).log( source, category, message );
+      verify( messageReceiver, times( 0 ) ).log( timestamp, source, category, message );
       
       systemUnderTest.log( source, category, message );
-      verify( messageReceiver, times( 1 ) ).log( source, category, message );
+      verify( messageReceiver, times( 1 ) ).log( timestamp, source, category, message );
    }//End Method
    
    @Test public void shouldFilterProgressUsingMatcher(){
@@ -165,13 +178,13 @@ public class DigestManagerTest {
    @Test public void shouldUnregisterMessageReceiver(){
       systemUnderTest.registerMessageReceiver( messageReceiver );
       systemUnderTest.log( source, category, message );
-      verify( messageReceiver, times( 1 ) ).log( source, category, message );
+      verify( messageReceiver, times( 1 ) ).log( timestamp, source, category, message );
       
       systemUnderTest.unregisterMessageReceiver( messageReceiver );
       
       systemUnderTest.log( source, category, message );
       systemUnderTest.log( source, category, message );
-      verify( messageReceiver, times( 1 ) ).log( source, category, message );
+      verify( messageReceiver, times( 1 ) ).log( timestamp, source, category, message );
    }//End Method
    
    @Test public void logShouldNotBreakWithConcurrentAccess() throws InterruptedException{
@@ -214,4 +227,20 @@ public class DigestManagerTest {
       latch.await();
    }//End Method
 
+   @Test public void resetShouldResetInstance(){
+      DigestManager.setInstance( null );
+      assertThat( DigestManager.getInstance(), is( nullValue() ) );
+      DigestManager.reset();
+      assertThat( DigestManager.getInstance(), is( notNullValue() ) );
+   }//End Method
+   
+   @Test public void defaultConstructorShouldSupplyTimestamp(){
+      systemUnderTest = new DigestManager();
+      systemUnderTest.registerMessageReceiver( messageReceiver );
+      systemUnderTest.log( null, null, null );
+      
+      ArgumentCaptor< LocalDateTime > timestampCaptor = ArgumentCaptor.forClass( LocalDateTime.class );
+      verify( messageReceiver ).log( timestampCaptor.capture(), Mockito.any(), Mockito.any(), Mockito.any() );
+      assertThat( timestampCaptor.getValue(), is( notNullValue() ) );
+   }//End Method
 }//End Class

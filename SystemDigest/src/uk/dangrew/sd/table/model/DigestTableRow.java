@@ -8,7 +8,7 @@
  */
  package uk.dangrew.sd.table.model;
 
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 
 import uk.dangrew.sd.core.category.Category;
 import uk.dangrew.sd.core.message.Message;
@@ -20,19 +20,19 @@ import uk.dangrew.sd.core.source.Source;
  */
 public class DigestTableRow {
 
-   private LocalTime timestamp;
+   private LocalDateTime timestamp;
    private Source source;
    private Category category;
    private Message message;
    
    /**
     * Constructs a new {@link DigestTableRow}.
-    * @param timestamp the {@link LocalTime} as a timestamp of the {@link Message}.
+    * @param timestamp the {@link LocalDateTime} as a timestamp of the {@link Message}.
     * @param source the {@link Source} of the message.
     * @param category the {@link Category} of the message.
     * @param message the {@link Message}.
     */
-   public DigestTableRow( LocalTime timestamp, Source source, Category category, Message message ) {
+   public DigestTableRow( LocalDateTime timestamp, Source source, Category category, Message message ) {
       if ( timestamp == null ) throw new IllegalArgumentException( "Null timestamp provided." );
       if ( source == null ) throw new IllegalArgumentException( "Null source provided." );
       if ( category == null ) throw new IllegalArgumentException( "Null category provided." );
@@ -46,9 +46,9 @@ public class DigestTableRow {
    
    /**
     * Getter for the timestamp of the {@link Message}.
-    * @return the {@link LocalTime} timestamp.
+    * @return the {@link LocalDateTime} timestamp.
     */
-   public LocalTime getTimestamp() {
+   public LocalDateTime getTimestamp() {
       return timestamp;
    }//End Method
 

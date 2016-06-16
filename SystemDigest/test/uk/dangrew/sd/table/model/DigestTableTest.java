@@ -15,6 +15,7 @@ import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 import org.hamcrest.Matchers;
@@ -34,8 +35,6 @@ import uk.dangrew.sd.digest.object.ObjectDigest;
 import uk.dangrew.sd.digest.object.ObjectDigestImpl;
 import uk.dangrew.sd.graphics.launch.TestApplication;
 import uk.dangrew.sd.table.context.DigestTableContextMenuOpener;
-import uk.dangrew.sd.table.model.DigestTable;
-import uk.dangrew.sd.table.model.DigestTableRow;
 import uk.dangrew.sd.table.presentation.CategoryColouredCell;
 
 /**
@@ -120,13 +119,13 @@ public class DigestTableTest {
    
    @Test public void shouldDisplayRowInformationFromDigestTableRow(){
       DigestTableRow row1 = new DigestTableRow( 
-               LocalTime.now(), 
+               LocalDateTime.now(), 
                new SourceImpl( this ), 
                Categories.objectAllocation(), 
                Messages.simpleMessage( "anything" ) 
       );
       DigestTableRow row2 = new DigestTableRow( 
-               LocalTime.now(), 
+               LocalDateTime.now(), 
                new SourceImpl( new Object() ), 
                Categories.processingSequence(), 
                Messages.simpleMessage( "something else" ) 

@@ -8,9 +8,11 @@
  */
 package uk.dangrew.sd.core.lockdown;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.function.Supplier;
 
 import uk.dangrew.sd.core.category.Category;
 import uk.dangrew.sd.core.message.Message;
@@ -50,15 +52,22 @@ public class DigestManager {
       setInstance( new DigestManager() );
    }//End Method
    
-   private Map< DigestMessageReceiver, MessageFilter > messageReceivers;
-   private Map< DigestProgressReceiver, ProgressFilter > progressReceivers;
+   private final Map< DigestMessageReceiver, MessageFilter > messageReceivers;
+   private final Map< DigestProgressReceiver, ProgressFilter > progressReceivers;
+   private final Supplier< LocalDateTime > timestampProvider;
+   
+   DigestManager() {
+      this( () -> LocalDateTime.now() );
+   }//End Constructor
    
    /**
     * Constructs a new {@link DigestManager}.
+    * @param timestampProvider the {@link Supplier} to decouple time.
     */
-   DigestManager() {
-      messageReceivers = Collections.synchronizedMap( new LinkedHashMap<>() );
-      progressReceivers = Collections.synchronizedMap( new LinkedHashMap<>() );
+   DigestManager( Supplier< LocalDateTime > timestampProvider ) {
+      this.messageReceivers = Collections.synchronizedMap( new LinkedHashMap<>() );
+      this.progressReceivers = Collections.synchronizedMap( new LinkedHashMap<>() );
+      this.timestampProvider = timestampProvider;
    }//End Constructor
 
    /**
@@ -68,9 +77,11 @@ public class DigestManager {
     * @param message the {@link Message}.
     */
    void log( Source source, Category category, Message message ) {
+      LocalDateTime timestamp = timestampProvider.get();
+      
       messageReceivers.forEach( ( receiver, filter ) -> {
          if ( filter == null || filter.matches( source, category, message ) ) {
-            receiver.log( source, category, message );
+            receiver.log( timestamp, source, category, message );
          }
       } );
    }//End Method

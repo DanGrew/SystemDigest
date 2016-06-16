@@ -8,6 +8,8 @@
  */
 package uk.dangrew.sd.core.lockdown;
 
+import java.time.LocalDateTime;
+
 import uk.dangrew.sd.core.category.Category;
 import uk.dangrew.sd.core.message.Message;
 import uk.dangrew.sd.core.source.Source;
@@ -32,8 +34,8 @@ public class DigestMessageReceiverImpl implements DigestMessageReceiver {
    /**
     * {@inheritDoc}
     */
-   @Override public void log( Source source, Category category, Message message ) {
-      actualReceiver.log( source, category, message );
+   @Override public void log( LocalDateTime timestamp, Source source, Category category, Message message ) {
+      actualReceiver.log( timestamp, source, category, message );
    }//End Method
 
    /**

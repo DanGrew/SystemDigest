@@ -8,7 +8,7 @@
  */
  package uk.dangrew.sd.table.model;
 
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 
 import com.sun.javafx.application.PlatformImpl;
 
@@ -84,9 +84,9 @@ public class DigestTableController implements DigestMessageReceiver {
    /**
     * {@inheritDoc}
     */
-   @Override public void log( Source source, Category category, Message message ) {
+   @Override public void log( LocalDateTime timestamp, Source source, Category category, Message message ) {
       PlatformImpl.runLater( () -> {
-         digestTable.getRows().add( 0, new DigestTableRow( LocalTime.now(), source, category, message ) );
+         digestTable.getRows().add( 0, new DigestTableRow( timestamp, source, category, message ) );
          rowLimit.limit( digestTable.getRows() );
       } );
    }//End Method

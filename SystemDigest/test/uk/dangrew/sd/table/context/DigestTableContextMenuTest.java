@@ -15,7 +15,7 @@ import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -37,8 +37,6 @@ import uk.dangrew.sd.core.category.Categories;
 import uk.dangrew.sd.core.message.Messages;
 import uk.dangrew.sd.core.source.SourceImpl;
 import uk.dangrew.sd.graphics.launch.TestApplication;
-import uk.dangrew.sd.table.context.DigestTableContextMenu;
-import uk.dangrew.sd.table.context.DigestTableContextMenuOpener;
 import uk.dangrew.sd.table.model.DigestTable;
 import uk.dangrew.sd.table.model.DigestTableController;
 import uk.dangrew.sd.table.model.DigestTableRow;
@@ -84,7 +82,9 @@ public class DigestTableContextMenuTest {
       TestApplication.launch( () -> {
          fullyLaunchedTable = new DigestTable();
          for ( int i = 0; i < 1000; i++ ) {
-            fullyLaunchedTable.getRows().add( new DigestTableRow( LocalTime.now(), new SourceImpl( this ), Categories.error(), Messages.simpleMessage( "sd" ) ) );
+            fullyLaunchedTable.getRows().add( new DigestTableRow( 
+                     LocalDateTime.now(), new SourceImpl( this ), Categories.error(), Messages.simpleMessage( "sd" ) ) 
+            );
          }
          opener = new DigestTableContextMenuOpener( fullyLaunchedTable, systemUnderTest );
          fullyLaunchedTable.setOnContextMenuRequested( opener );

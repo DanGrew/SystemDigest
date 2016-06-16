@@ -8,7 +8,7 @@
  */
  package uk.dangrew.sd.table.model;
 
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -53,28 +53,28 @@ public class DigestTable extends TableView< DigestTableRow > {
     * Method to initialise the {@link TableColumn}s and their associated constraints.
     */
    private void initialiseColumns(){
-      TableColumn< DigestTableRow, LocalTime > timestampColumn = new TableColumn<>( COLUMN_TITLE_TIMESTAMP );
+      TableColumn< DigestTableRow, LocalDateTime > timestampColumn = new TableColumn<>( COLUMN_TITLE_TIMESTAMP );
       timestampColumn.prefWidthProperty().bind( widthProperty().divide( 6 ) );
       timestampColumn.setCellValueFactory( object -> new SimpleObjectProperty<>( object.getValue().getTimestamp() ) );
-      timestampColumn.setCellFactory( column -> { return new CategoryColouredCell< LocalTime >(); } );
+      timestampColumn.setCellFactory( column -> new CategoryColouredCell< LocalDateTime >() );
       getColumns().add( timestampColumn );
       
       TableColumn< DigestTableRow, String > categoryColumn = new TableColumn<>( COLUMN_TITLE_CATEGORY );
       categoryColumn.prefWidthProperty().bind( widthProperty().divide( 6 ) );
       categoryColumn.setCellValueFactory( object -> new SimpleStringProperty( object.getValue().getCategory().getName() ) );
-      categoryColumn.setCellFactory( column -> { return new CategoryColouredCell< String >(); } );
+      categoryColumn.setCellFactory( column -> new CategoryColouredCell< String >() );
       getColumns().add( categoryColumn );
       
       TableColumn< DigestTableRow, String > sourceColumn = new TableColumn<>( COLUMN_TITLE_SOURCE );
       sourceColumn.prefWidthProperty().bind( widthProperty().divide( 6 ) );
       sourceColumn.setCellValueFactory( object -> new SimpleStringProperty( object.getValue().getSource().getIdentifier() ) );
-      sourceColumn.setCellFactory( column -> { return new CategoryColouredCell< String >(); } );
+      sourceColumn.setCellFactory( column -> new CategoryColouredCell< String >() );
       getColumns().add( sourceColumn );
       
       TableColumn< DigestTableRow, String > messageColumn = new TableColumn<>( COLUMN_TITLE_MESSAGE );
       messageColumn.prefWidthProperty().bind( widthProperty().divide( 2 ) );
       messageColumn.setCellValueFactory( object -> new SimpleStringProperty( object.getValue().getMessage().getMessage() ) );
-      messageColumn.setCellFactory( column -> { return new CategoryColouredCell< String >(); } );
+      messageColumn.setCellFactory( column -> new CategoryColouredCell< String >() );
       getColumns().add( messageColumn );
    }//End Method
 

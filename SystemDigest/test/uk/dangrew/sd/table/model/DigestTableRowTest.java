@@ -11,7 +11,7 @@
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -21,14 +21,13 @@ import org.mockito.MockitoAnnotations;
 import uk.dangrew.sd.core.category.Category;
 import uk.dangrew.sd.core.message.Message;
 import uk.dangrew.sd.core.source.Source;
-import uk.dangrew.sd.table.model.DigestTableRow;
 
 /**
  * {@link DigestTableRow} test.
  */
 public class DigestTableRowTest {
 
-   private LocalTime timestamp;
+   private LocalDateTime timestamp;
    @Mock private Source source;
    @Mock private Category category;
    @Mock private Message message;
@@ -36,7 +35,7 @@ public class DigestTableRowTest {
    
    @Before public void initialiseSystemUnderTest(){
       MockitoAnnotations.initMocks( this );
-      timestamp = LocalTime.now();
+      timestamp = LocalDateTime.now();
       systemUnderTest = new DigestTableRow( timestamp, source, category, message );
    }//End Method
    

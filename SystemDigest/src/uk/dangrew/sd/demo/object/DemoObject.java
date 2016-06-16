@@ -37,7 +37,7 @@ public class DemoObject {
    public void processSomeInformation( int numberOfIterations ) {
       for ( int i = 0; i < numberOfIterations; i++ ) {
          digest.log( Categories.processingSequence(), new MessageImpl( "Step " + numberOfIterations ) );
-         digest.progress( new ProgressImpl( ( 100 / numberOfIterations ) * ( i + 1 ) ), new MessageImpl( "" + i ) );
+         digest.progress( new ProgressImpl( ( 100 / numberOfIterations ) * ( i + 1 ) ), new MessageImpl( Integer.toString( i ) ) );
       }
    }//End Method
 
