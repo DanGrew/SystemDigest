@@ -17,6 +17,7 @@ import static org.junit.Assert.fail;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
@@ -29,10 +30,14 @@ import java.util.Scanner;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
+import uk.dangrew.sd.core.lockdown.DigestMessageReceiver;
+import uk.dangrew.sd.core.lockdown.DigestMessageReceiverImpl;
 
 /**
  * {@link BasicStringIO} test,
@@ -44,12 +49,15 @@ public class BasicStringIOTest {
    private static final String POPULATING_FILE = "populating-file.txt";
    private static final String SUB_FOLDER_FILE = "testing/populating-file.txt";
    
+   @Mock private BasicStringIODigest digest;
    private String object;
    private BasicStringIO systemUnderTest;
    
    @Before public void initialiseSystemUnderTest(){
+      MockitoAnnotations.initMocks( this );
+      
       object = "i need to write this something to file";
-      systemUnderTest = new BasicStringIO();
+      systemUnderTest = new BasicStringIO( digest );
       
       File file = constructFileFor( POPULATING_FILE );
       if ( file.exists() ) {
@@ -158,6 +166,7 @@ public class BasicStringIOTest {
       when( file.createNewFile() ).thenThrow( new IOException() );
       
       assertThat( systemUnderTest.write( file, object, false ), is( false ) );
+      verify( digest ).failedToSetupFiles( Mockito.eq( file ), Mockito.any() );
    }//End Method
    
    @Test public void writeShouldFailGracefullyIfFileWriterCannotBeCreated() throws IOException{
@@ -166,6 +175,7 @@ public class BasicStringIOTest {
       doAnswer( invocation -> { throw new IOException(); } ).when( file ).getPath();
       
       assertThat( systemUnderTest.write( file, object, false ), is( false ) );
+      verify( digest ).failedToWriteToFile( Mockito.eq( file ), Mockito.any() );
    }//End Method
    
    /**
@@ -202,5 +212,23 @@ public class BasicStringIOTest {
       object = systemUnderTest.read( file );
       assertThat( object.toString(), is( logA + logB + logC ) );
    }//End Method
-
+   
+   @Test public void publicConstructorShouldProvideDigest(){
+      DigestMessageReceiver receiver = mock( DigestMessageReceiver.class );
+      new DigestMessageReceiverImpl( receiver );
+      
+      systemUnderTest = new BasicStringIO();
+      
+      File file = mock( File.class );
+      when( file.exists() ).thenReturn( true );
+      doAnswer( invocation -> { throw new IOException(); } ).when( file ).getPath();
+      
+      assertThat( systemUnderTest.write( file, object, false ), is( false ) );
+      verify( receiver ).log( Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any() );
+   }//End Method
+   
+   @Test public void shouldAttachSourceToDigest(){
+      verify( digest ).attachSource( systemUnderTest );
+   }//End Method
+   
 }//End Class

@@ -19,6 +19,24 @@ import java.util.Scanner;
  * {@link BasicStringIO} provides basic read and write functionality for files.
  */
 public class BasicStringIO {
+   
+   private final BasicStringIODigest digest;
+   
+   /**
+    * Constructs a new {@link BasicStringIO} with a default {@link BasicStringIODigest}.
+    */
+   public BasicStringIO() {
+      this( new BasicStringIODigest() );
+   }//End Constructor
+   
+   /**
+    * Constructs a new {@link BasicStringIO} with the given {@link BasicStringIODigest}.
+    * @param digest the {@link BasicStringIODigest} to attach to.
+    */
+   BasicStringIO( BasicStringIODigest digest ) {
+      this.digest = digest;
+      this.digest.attachSource( this );
+   }//End Constructor
 
    /**
     * Method to read the {@link String} data from the given {@link File}.
@@ -76,7 +94,7 @@ public class BasicStringIO {
             }
             file.createNewFile();
          } catch ( IOException e ) {
-            //TODO - digest.
+            digest.failedToSetupFiles( file, e );
             return false;
          }
       }
@@ -85,7 +103,7 @@ public class BasicStringIO {
          writer.write( object );
          return true;
       } catch ( IOException e ) {
-         //TODO - digest.
+         digest.failedToWriteToFile( file, e );
          return false;
       }
    }//End Method
