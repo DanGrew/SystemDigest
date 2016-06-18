@@ -55,7 +55,7 @@ public class JarProtocol implements FileLocationProtocol {
     * Method to get the {@link File} source.
     * @return the {@link File}.
     */
-   File getSource(){
+   public File getSource(){
       return source;
    }//End Method
    
