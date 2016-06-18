@@ -33,10 +33,18 @@ sourceSets {
         java {
             srcDir 'src'
         }
+        resources {
+			srcDir 'src'
+        }
     }
     test {
         java {
             srcDir 'test'
+        }
+        resources {
+//resources are dotted through the folder - arguably against conventions
+			srcDir 'src'
+        	srcDir 'test'
         }
     }
 }
