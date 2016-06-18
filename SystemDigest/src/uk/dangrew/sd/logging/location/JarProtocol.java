@@ -28,7 +28,7 @@ public class JarProtocol implements FileLocationProtocol {
     * @param relativeTo the {@link Class} providing the {@link CodeSource} to place
     * the {@link File} relative to.
     */
-   protected JarProtocol( String subFolder, String filename, Class< ? > relativeTo ) {
+   public JarProtocol( String subFolder, String filename, Class< ? > relativeTo ) {
       if ( filename == null || relativeTo == null ) {
          throw new NullPointerException( "Parameters cannot be null." );
       }
