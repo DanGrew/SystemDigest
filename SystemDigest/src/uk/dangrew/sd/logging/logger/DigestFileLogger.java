@@ -98,7 +98,7 @@ public class DigestFileLogger implements Runnable, DigestMessageReceiver {
    }//End Method
 
    /**
-    * Method to format the given log information into a writable log file.
+    * Method to format the given log information into a writable log line, with a line break.
     * @param timestamp the {@link LocalDateTime} timestamp of the log.
     * @param source the {@link Source} logged.
     * @param category the {@link Category} logged.
@@ -106,6 +106,6 @@ public class DigestFileLogger implements Runnable, DigestMessageReceiver {
     * @return a formatted {@link String}.
     */
    static String format( LocalDateTime timestamp, Source source, Category category, Message message ) {
-      return timestamp.toString() + ", " + source.getIdentifier() + ", " + category.getName() + ", " + message.getMessage();
+      return timestamp.toString() + ", " + source.getIdentifier() + ", " + category.getName() + ", " + message.getMessage() + "\n";
    }//End Method
 }//End Class

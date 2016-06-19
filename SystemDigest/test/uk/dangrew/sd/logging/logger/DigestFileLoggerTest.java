@@ -137,7 +137,7 @@ public class DigestFileLoggerTest {
    }//End Method
    
    @Test public void shouldConvertLogIntoReadableString(){
-      String expected = "-999999999-01-01T00:00, source, category, message";
+      String expected = "-999999999-01-01T00:00, source, category, message\n";
       assertThat( DigestFileLogger.format( timestamp, source, category, message ), is( expected ) );
    }//End Method
    
