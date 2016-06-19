@@ -19,7 +19,6 @@ import java.time.LocalDateTime;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -61,12 +60,9 @@ public class DigestFileLoggerTest {
       when( category.getName() ).thenReturn( "category" );
       when( message.getMessage() ).thenReturn( "message" );
       
-      systemUnderTest = new DigestFileLogger( protocol );
+      systemUnderTest = new DigestFileLogger();
+      systemUnderTest.setFileLocation( protocol );
       systemUnderTest.connect();
-   }//End Method
-   
-   @After public void teardown(){
-      systemUnderTest.shutdown( 0 );
    }//End Method
    
    /**
@@ -78,9 +74,7 @@ public class DigestFileLoggerTest {
    
    @Test public void shouldConnectToDigest() {
       fireMessage();
-      systemUnderTest.shutdown( 1 );
-      
-      systemUnderTest.run();
+      systemUnderTest.iterate();
       verify( protocol ).logToLocation( Mockito.anyString() );
    }//End Method
    
@@ -88,8 +82,9 @@ public class DigestFileLoggerTest {
       systemUnderTest.disconnect();
       fireMessage();
       
-      systemUnderTest.shutdown( 10 );
-      systemUnderTest.run();
+      for ( int i = 0; i < 10; i++ ) {
+         systemUnderTest.iterate();
+      }
       
       verify( protocol, never() ).logToLocation( Mockito.anyString() );
    }//End Method
@@ -98,9 +93,19 @@ public class DigestFileLoggerTest {
       systemUnderTest.log( timestamp, source, category, message );
       verify( protocol, never() ).logToLocation( Mockito.anyString() );
       
-      systemUnderTest.shutdown( 1 );
-      systemUnderTest.run();
+      systemUnderTest.iterate();
       verify( protocol ).logToLocation( DigestFileLogger.format( timestamp, source, category, message ) );
+   }//End Method
+   
+   @Test public void runShouldNotLogIfNoProtocolAssociated(){
+      systemUnderTest = new DigestFileLogger();
+      systemUnderTest.connect();
+      
+      systemUnderTest.log( timestamp, source, category, message );
+      verify( protocol, never() ).logToLocation( Mockito.anyString() );
+      
+      systemUnderTest.iterate();
+      verify( protocol, never() ).logToLocation( DigestFileLogger.format( timestamp, source, category, message ) );
    }//End Method
    
    @Test public void runShouldPollForMessagesToLogAndFindMany(){
@@ -119,21 +124,11 @@ public class DigestFileLoggerTest {
       systemUnderTest.log( timestamp, source, category, message );
       verify( protocol, never() ).logToLocation( Mockito.anyString() );
       
-      systemUnderTest.shutdown( 4 );
-      systemUnderTest.run();
+      for ( int i = 0; i < 4; i++ ) {
+         systemUnderTest.iterate();
+      }
       verify( protocol, times( 3 ) ).logToLocation( firstExpected );
       verify( protocol, times( 1 ) ).logToLocation( secondExpected );
-   }//End Method
-   
-   @Test public void shutdownShouldStopLogging(){
-      systemUnderTest.shutdown( 0 );
-      systemUnderTest.run();
-      
-      systemUnderTest.log( timestamp, source, category, message );
-      systemUnderTest.log( timestamp, source, category, message );
-      systemUnderTest.log( timestamp, source, category, message );
-      
-      verify( protocol, never() ).logToLocation( Mockito.anyString() );
    }//End Method
    
    @Test public void shouldConvertLogIntoReadableString(){
@@ -146,7 +141,7 @@ public class DigestFileLoggerTest {
       when( protocol.logToLocation( Mockito.anyString() ) ).then( invocation -> { latch.countDown(); return null; } );
       
       fireMessage();
-      new ThreadedWrapper( systemUnderTest );
+      new ThreadedWrapper().wrap( systemUnderTest, 1 );
       
       latch.await();
       verify( protocol ).logToLocation( Mockito.anyString() );
@@ -157,13 +152,19 @@ public class DigestFileLoggerTest {
       CountDownLatch latch = new CountDownLatch( wantedNumberOfMessages );
       when( protocol.logToLocation( Mockito.anyString() ) ).then( invocation -> { latch.countDown(); return null; } );
       
-      new ThreadedWrapper( systemUnderTest );
+      ThreadedWrapper wrapper = new ThreadedWrapper();
+      wrapper.wrap( systemUnderTest, -1 );
       
       for ( int i = 0; i < wantedNumberOfMessages; i++ ) {
          fireMessage();
       }
       
-      latch.await();
+      latch.await( 5000, TimeUnit.MILLISECONDS );
+      wrapper.shutdown();
       verify( protocol, times( wantedNumberOfMessages ) ).logToLocation( Mockito.anyString() );
+   }//End Method
+   
+   @Test( expected = IllegalArgumentException.class ) public void shouldNotAccpetNullProtocol(){
+      systemUnderTest.setFileLocation( null );
    }//End Method
 }//End Class

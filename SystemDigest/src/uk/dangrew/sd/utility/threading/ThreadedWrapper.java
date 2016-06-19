@@ -14,14 +14,33 @@ package uk.dangrew.sd.utility.threading;
  */
 public class ThreadedWrapper {
    
+   private volatile int shutdownCounter = -1;
+   
    /**
-    * Constructs a new {@link ThreadedWrapper}. This will launch a new {@link Thread}
-    * with the given {@link Runnable} and start it immediately.
+    * This will launch a new {@link Thread} with the given {@link Runnable} and start it immediately.
     * @param runnable the {@link Runnable} to run. This is responsible for stopping the
     * {@link Thread} safely with an exit condition.
+    * @param iterations the number of iterations to perform, -1 to continue indefinitely.
     */
-   public ThreadedWrapper( Runnable runnable ) {
-      new Thread( runnable ).start();
+   public void wrap( ProtectedRunnable runnable, int iterations ) {
+      shutdownCounter = iterations;
+      new Thread( () -> {
+         
+         while ( shutdownCounter == -1 || shutdownCounter > 0 ){
+            if ( shutdownCounter != -1 ) {
+               shutdownCounter--;
+            }
+            
+            runnable.iterate();
+         }
+      } ).start();
    }//End Constructor
+   
+   /**
+    * Method to shutdown the {@link Thread}.
+    */
+   public void shutdown(){
+      shutdownCounter = 0;
+   }//End Method
 
 }//End Class

@@ -18,28 +18,40 @@ import uk.dangrew.sd.core.lockdown.DigestMessageReceiverImpl;
 import uk.dangrew.sd.core.message.Message;
 import uk.dangrew.sd.core.source.Source;
 import uk.dangrew.sd.logging.location.LoggingLocationProtocol;
+import uk.dangrew.sd.utility.threading.ProtectedRunnable;
 
 /**
  * The {@link DigestFileLogger} is responsible for logging digest {@link Message}s to
  * a {@link LoggingLocationProtocol}.
  */
-public class DigestFileLogger implements Runnable, DigestMessageReceiver {
+public class DigestFileLogger implements ProtectedRunnable, DigestMessageReceiver {
    
    private final DigestMessageReceiver receiver;
-   private final LoggingLocationProtocol protocol;
    private final BlockingQueue< String > logQueue;
    
-   private Integer shutdownCounter = null;
+   private LoggingLocationProtocol protocol;
    
    /**
     * Constructs a new {@link DigestFileLogger}. 
     * @param protocol the {@link LoggingLocationProtocol} to log to.
     */
-   public DigestFileLogger( LoggingLocationProtocol protocol ) {
+   public DigestFileLogger() {
       this.receiver = new DigestMessageReceiverImpl( this );
-      this.protocol = protocol;
       this.logQueue = new LinkedBlockingQueue<>();
    }//End Constructor
+   
+   /**
+    * Method to set the {@link LoggingLocationProtocol}. This must be called in
+    * order for logging to function.
+    * @param protocol the {@link LoggingLocationProtocol}, cannot be null.
+    */
+   public void setFileLocation( LoggingLocationProtocol protocol ) {
+      if ( protocol == null ) {
+         throw new IllegalArgumentException( "Must provide non null file location." );
+      }
+      
+      this.protocol = protocol;
+   }//End Method
 
    /**
     * {@inheritDoc}
@@ -68,33 +80,22 @@ public class DigestFileLogger implements Runnable, DigestMessageReceiver {
     * Should only be run from within a {@link Thread}, the SystemDigest provides a 
     * {@link uk.dangrew.sd.utility.threading.ThreadedWrapper} to do this.
     */
-   @Override public void run() {
-      while ( shutdownCounter == null || shutdownCounter > 0 ){
-         if ( shutdownCounter != null ) {
-            shutdownCounter--;
-         }
-         
-         if ( logQueue.isEmpty() ) {
-            continue;
-         }
-         
-         String log;
-         try {
-            log = logQueue.take();
-            protocol.logToLocation( log );
-         } catch ( InterruptedException exception ) {
-            exception.printStackTrace();
-         }
+   @Override public void iterate() {
+      if ( protocol == null ) {
+         return;
       }
-   }//End Method
-   
-   /**
-    * Method to shutdown the logger which will stop processing the queued logs
-    * after the given log iterations.
-    * @param iterations the number of times to check for new logs before stopping.
-    */
-   public void shutdown( int iterations ) {
-      shutdownCounter = iterations;
+      
+      if ( logQueue.isEmpty() ) {
+         return;
+      }
+      
+      String log;
+      try {
+         log = logQueue.take();
+         protocol.logToLocation( log );
+      } catch ( InterruptedException exception ) {
+         exception.printStackTrace();
+      }
    }//End Method
 
    /**
