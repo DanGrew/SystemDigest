@@ -9,8 +9,8 @@
 package uk.dangrew.sd.logging.logger;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import uk.dangrew.sd.core.category.Category;
 import uk.dangrew.sd.core.lockdown.DigestMessageReceiver;
@@ -27,7 +27,7 @@ public class DigestFileLogger implements Runnable, DigestMessageReceiver {
    
    private final DigestMessageReceiver receiver;
    private final LoggingLocationProtocol protocol;
-   private final List< String > logQueue;
+   private final BlockingQueue< String > logQueue;
    
    private Integer shutdownCounter = null;
    
@@ -38,7 +38,7 @@ public class DigestFileLogger implements Runnable, DigestMessageReceiver {
    public DigestFileLogger( LoggingLocationProtocol protocol ) {
       this.receiver = new DigestMessageReceiverImpl( this );
       this.protocol = protocol;
-      this.logQueue = new ArrayList<>();
+      this.logQueue = new LinkedBlockingQueue<>();
    }//End Constructor
 
    /**
@@ -78,8 +78,13 @@ public class DigestFileLogger implements Runnable, DigestMessageReceiver {
             continue;
          }
          
-         String log = logQueue.remove( 0 );
-         protocol.logToLocation( log );
+         String log;
+         try {
+            log = logQueue.take();
+            protocol.logToLocation( log );
+         } catch ( InterruptedException exception ) {
+            exception.printStackTrace();
+         }
       }
    }//End Method
    

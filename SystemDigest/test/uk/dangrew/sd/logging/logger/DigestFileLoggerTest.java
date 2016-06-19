@@ -151,4 +151,19 @@ public class DigestFileLoggerTest {
       latch.await();
       verify( protocol ).logToLocation( Mockito.anyString() );
    }//End Method
+   
+   @Test public void shouldPropogateFromOneThreadToAnother() throws InterruptedException{
+      final int wantedNumberOfMessages = 20;
+      CountDownLatch latch = new CountDownLatch( wantedNumberOfMessages );
+      when( protocol.logToLocation( Mockito.anyString() ) ).then( invocation -> { latch.countDown(); return null; } );
+      
+      new ThreadedWrapper( systemUnderTest );
+      
+      for ( int i = 0; i < wantedNumberOfMessages; i++ ) {
+         fireMessage();
+      }
+      
+      latch.await();
+      verify( protocol, times( wantedNumberOfMessages ) ).logToLocation( Mockito.anyString() );
+   }//End Method
 }//End Class
