@@ -20,6 +20,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
@@ -34,6 +35,7 @@ import uk.dangrew.sd.core.message.Messages;
 import uk.dangrew.sd.core.source.Source;
 import uk.dangrew.sd.core.source.SourceImpl;
 import uk.dangrew.sd.digest.object.ObjectDigestImpl;
+import uk.dangrew.sd.logging.location.JarLoggingProtocol;
 import uk.dangrew.sd.logging.location.LoggingLocationProtocol;
 import uk.dangrew.sd.utility.threading.ThreadedWrapper;
 
@@ -63,6 +65,21 @@ public class DigestFileLoggerTest {
       systemUnderTest = new DigestFileLogger();
       systemUnderTest.setFileLocation( protocol );
       systemUnderTest.connect();
+   }//End Method
+   
+   @Ignore
+   @Test public void manual(){
+      systemUnderTest = new DigestFileLogger();
+      LoggingLocationProtocol protocol = new JarLoggingProtocol( "DigestFileLogger.txt", getClass() );
+      systemUnderTest.setFileLocation( protocol );
+      protocol.setFileSizeLimit( 1000L );
+      
+      int lineNo = 0;
+      while ( true ) {
+         systemUnderTest.log( LocalDateTime.now(), new SourceImpl( this ), Categories.error(), Messages.simpleMessage( "line " + lineNo ) );
+         systemUnderTest.iterate();
+         lineNo++;
+      }
    }//End Method
    
    /**

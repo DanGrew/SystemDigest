@@ -19,6 +19,7 @@ public class JarLoggingProtocol implements LoggingLocationProtocol {
    
    private final JarProtocol protocol;
    private final BasicStringIO stringIO;
+   private Long fileSizeLimit;
    
    /**
     * Constructs a new {@link JarLoggingProtocol}.
@@ -48,6 +49,7 @@ public class JarLoggingProtocol implements LoggingLocationProtocol {
    JarLoggingProtocol( BasicStringIO stringIO, JarProtocol protocol ) {
       this.protocol = protocol;
       this.stringIO = stringIO;
+      this.fileSizeLimit = null;
    }//End Constructor
    
    /**
@@ -61,7 +63,18 @@ public class JarLoggingProtocol implements LoggingLocationProtocol {
     * {@inheritDoc}
     */
    @Override public boolean logToLocation( String logLine ) {
-      return stringIO.write( protocol.getSource(), logLine, true );
+      if ( fileSizeLimit != null && protocol.getSource().length() > fileSizeLimit ) {
+         return stringIO.write( protocol.getSource(), logLine, false );
+      } else {
+         return stringIO.write( protocol.getSource(), logLine, true );
+      }
+   }//End Method
+   
+   /**
+    * {@inheritDoc}
+    */
+   @Override public void setFileSizeLimit( Long bytes ) {
+      this.fileSizeLimit = bytes;
    }//End Method
 
 }//End Class

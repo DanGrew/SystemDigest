@@ -76,5 +76,36 @@ public class JarLoggingProtocolTest {
       systemUnderTest = new JarLoggingProtocol( "sub", "anything", getClass() );
       assertThat( systemUnderTest.getLocation(), containsString( "sub/anything" ) );
    }//End Method
-
+   
+   @Test public void shouldNotAppendIfFileSizeIsGreaterThanLimit(){
+      systemUnderTest.setFileSizeLimit( 1000L );
+      
+      File file = mock( File.class );
+      when( protocol.getSource() ).thenReturn( file );
+      when( file.length() ).thenReturn( 1001L );
+      
+      systemUnderTest.logToLocation( "anything" );
+      verify( stringIO ).write( file, "anything", false );
+   }//End Method
+   
+   @Test public void shouldAppendIfFileSizeIsLimit(){
+      systemUnderTest.setFileSizeLimit( 1000L );
+      
+      File file = mock( File.class );
+      when( protocol.getSource() ).thenReturn( file );
+      when( file.length() ).thenReturn( 1000L );
+      
+      systemUnderTest.logToLocation( "anything" );
+      verify( stringIO ).write( file, "anything", true );
+   }//End Method
+   
+   @Test public void shouldAppendIndefintelyByDefault(){
+      File file = mock( File.class );
+      when( protocol.getSource() ).thenReturn( file );
+      when( file.length() ).thenReturn( Long.MAX_VALUE );
+      
+      systemUnderTest.logToLocation( "anything" );
+      verify( stringIO ).write( file, "anything", true );
+   }//End Method
+   
 }//End Class

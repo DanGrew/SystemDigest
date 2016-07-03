@@ -22,4 +22,12 @@ public interface LoggingLocationProtocol extends FileLocationProtocol {
     */
    public boolean logToLocation( String logLine );
    
+   /**
+    * Method to set the {@link java.io.File} size limit. Default is unlimited, logging will happen
+    * no matter what the size is. 
+    * @param bytes the number of bytes in size the file can be, if greater than this, it should be
+    * written over.
+    */
+   public void setFileSizeLimit( Long bytes );
+   
 }//End Interface
