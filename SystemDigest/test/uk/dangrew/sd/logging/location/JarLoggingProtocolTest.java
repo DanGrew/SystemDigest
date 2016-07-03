@@ -90,6 +90,7 @@ public class JarLoggingProtocolTest {
    
    @Test public void shouldAppendIfFileSizeIsLimit(){
       systemUnderTest.setFileSizeLimit( 1000L );
+      assertThat( systemUnderTest.getFileSizeLimit(), is( 1000L ) );
       
       File file = mock( File.class );
       when( protocol.getSource() ).thenReturn( file );

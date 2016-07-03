@@ -76,5 +76,12 @@ public class JarLoggingProtocol implements LoggingLocationProtocol {
    @Override public void setFileSizeLimit( Long bytes ) {
       this.fileSizeLimit = bytes;
    }//End Method
+   
+   /**
+    * {@inheritDoc}
+    */
+   @Override public Long getFileSizeLimit() {
+      return fileSizeLimit;
+   }//End Method
 
 }//End Class

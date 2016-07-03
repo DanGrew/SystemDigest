@@ -30,4 +30,10 @@ public interface LoggingLocationProtocol extends FileLocationProtocol {
     */
    public void setFileSizeLimit( Long bytes );
    
+   /**
+    * Getter for the current {@link java.io.File} size limit.
+    * @return the limit in bytes.
+    */
+   public Long getFileSizeLimit();
+   
 }//End Interface
