@@ -64,4 +64,11 @@ public class MessageImpl implements Message {
       return true;
    }//End Method
    
+   /**
+    * {@inheritDoc}
+    */
+   @Override public String toString() {
+      return "Basic message: " + messageText;
+   }//End Method
+   
 }//End Class

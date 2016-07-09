@@ -71,6 +71,7 @@ public class BasicStringIO {
          Scanner scanner = new Scanner( stream );
          return readScannerContentAndClose( scanner );
       } catch ( IOException e ) {
+         e.printStackTrace();
          return null;
       } 
    }//End Method
