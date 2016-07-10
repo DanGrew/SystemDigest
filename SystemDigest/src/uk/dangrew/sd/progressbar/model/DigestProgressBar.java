@@ -8,6 +8,8 @@
  */
 package uk.dangrew.sd.progressbar.model;
 
+import com.sun.javafx.application.PlatformImpl;
+
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
@@ -55,12 +57,18 @@ public class DigestProgressBar extends GridPane {
    
    /**
     * Method to handle some {@link Progress} with a {@link Message} for the associated {@link Source}.
+    * @param source the {@link Source} provided with the progress, to be filtered against.
     * @param progress the {@link Progress} provided.
     * @param message the {@link Message} associated.
     */
-   void handleProgress( Progress progress, Message message ) {
-      progressBar.setProgress( Progress.percentageToProgress( progress.getPercentage() ) );
-      messageLabel.setText( concatenateSourceAndMessage( source, message ) );
+   public void handleProgress( Source source, Progress progress, Message message ) {
+      if ( !source.equals( this.source ) ) {
+         return;
+      }
+      PlatformImpl.runAndWait( () -> {
+         progressBar.setProgress( Progress.percentageToProgress( progress.getPercentage() ) );
+         messageLabel.setText( concatenateSourceAndMessage( source, message ) );
+      } );
    }//End Method
    
    /**

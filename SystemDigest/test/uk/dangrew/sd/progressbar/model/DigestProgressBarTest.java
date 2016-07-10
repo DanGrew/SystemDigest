@@ -25,9 +25,9 @@ import javafx.scene.layout.ColumnConstraints;
 import uk.dangrew.sd.core.message.Messages;
 import uk.dangrew.sd.core.progress.ProgressImpl;
 import uk.dangrew.sd.core.progress.Progresses;
+import uk.dangrew.sd.core.source.Source;
 import uk.dangrew.sd.core.source.SourceImpl;
 import uk.dangrew.sd.graphics.launch.TestApplication;
-import uk.dangrew.sd.progressbar.model.DigestProgressBar;
 import uk.dangrew.sd.utility.TestCommon;
 
 /**
@@ -35,11 +35,13 @@ import uk.dangrew.sd.utility.TestCommon;
  */
 public class DigestProgressBarTest {
 
+   private Source source;
    private DigestProgressBar systemUnderTest;
    
    @Before public void initialiseSystemUnderTest() throws InterruptedException{
       TestApplication.launch( () -> { 
-         systemUnderTest = new DigestProgressBar( new SourceImpl( this ) );
+         source = new SourceImpl( this );
+         systemUnderTest = new DigestProgressBar( source );
          return systemUnderTest;
       } );
    }//End Method
@@ -49,7 +51,7 @@ public class DigestProgressBarTest {
       for ( int i = 0; i < 101; i++ ) {
          final int j = i;
          PlatformImpl.runAndWait( () -> {
-            systemUnderTest.handleProgress( new ProgressImpl( j / 100.0 ), Messages.simpleMessage( "looping " + j ) );
+            systemUnderTest.handleProgress( source, new ProgressImpl( j / 100.0 ), Messages.simpleMessage( "looping " + j ) );
             try {
                Thread.sleep( 100 );
             } catch ( Exception e ) {
@@ -58,7 +60,7 @@ public class DigestProgressBarTest {
          } );
       }
       PlatformImpl.runAndWait( () -> {
-         systemUnderTest.handleProgress( Progresses.complete(), Messages.simpleMessage( "done" ) );
+         systemUnderTest.handleProgress( source, Progresses.complete(), Messages.simpleMessage( "done" ) );
       } );
       Thread.sleep( 1000000 );
    }//End Method
@@ -100,7 +102,7 @@ public class DigestProgressBarTest {
       final double progress = 45.34;
       final String message = "anything special to report";
       PlatformImpl.runAndWait( () -> {
-         systemUnderTest.handleProgress( Progresses.simpleProgress( progress ), Messages.simpleMessage( message ) );
+         systemUnderTest.handleProgress( source, Progresses.simpleProgress( progress ), Messages.simpleMessage( message ) );
       } );
       
       assertThat( 
@@ -116,6 +118,20 @@ public class DigestProgressBarTest {
                DigestProgressBar.concatenateSourceAndMessage( new SourceImpl( this ), Messages.simpleMessage( message ) ), 
                is( toString() + ": " + message ) 
       );
+   }//End Method
+   
+   @Test public void shouldIgnoreMismatchingSource(){
+      assertThat( systemUnderTest.messageLabel().getText(), isEmptyString() );
+      assertThat( systemUnderTest.progressBar().getProgress(), is( -1.0 ) );
+      
+      final double progress = 45.34;
+      final String message = "anything special to report";
+      PlatformImpl.runAndWait( () -> {
+         systemUnderTest.handleProgress( new SourceImpl( new Object() ), Progresses.simpleProgress( progress ), Messages.simpleMessage( message ) );
+      } );
+      
+      assertThat( systemUnderTest.messageLabel().getText(), isEmptyString() );
+      assertThat( systemUnderTest.progressBar().getProgress(), is( -1.0 ) );
    }//End Method
 
 }//End Class

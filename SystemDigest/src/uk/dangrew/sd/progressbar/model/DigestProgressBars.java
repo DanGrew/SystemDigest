@@ -51,7 +51,7 @@ public class DigestProgressBars extends BorderPane {
          sourceProgressBars.put( source, progressBar );
          progressLayout.getChildren().add( progressBar );
       }
-      progressBar.handleProgress( progress, message );
+      progressBar.handleProgress( source, progress, message );
       
       if ( progress.isComplete() ) {
          progressLayout.getChildren().remove( progressBar );

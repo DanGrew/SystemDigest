@@ -86,5 +86,13 @@ public class ObjectDigestImpl implements ObjectDigest {
       
       digestConnector.progress( source, progress, message );
    }//End Method
+   
+   /**
+    * Getter for the {@link Source} associated.
+    * @return the {@link Source}.
+    */
+   protected Source getSource() {
+      return source;
+   }//End Method
 
 }//End Class

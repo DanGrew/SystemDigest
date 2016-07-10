@@ -8,6 +8,8 @@
  */
 package uk.dangrew.sd.digest.object;
 
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -75,6 +77,10 @@ public class ObjectDigestImplTest {
    public void shouldAllowConstructionWithConnectorOnlyButEnforceSourceAttachedForProgress(){
       systemUnderTest = new ObjectDigestImpl();
       systemUnderTest.progress( progress, message );
+   }//End Method
+   
+   @Test public void shouldProvideSource(){
+      assertThat( systemUnderTest.getSource(), is( source ) );
    }//End Method
 
 }//End Class
