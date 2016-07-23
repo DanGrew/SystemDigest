@@ -72,6 +72,22 @@ public class DigestProgressBar extends GridPane {
    }//End Method
    
    /**
+    * Getter for the current progress percentage directly from the {@link ProgressBar}.
+    * @return the progress.
+    */
+   public double getProgress(){
+      return progressBar.getProgress();
+   }//End Method
+   
+   /**
+    * Getter for the text associated with progress.
+    * @return the text associated.
+    */
+   public String getText(){
+      return messageLabel.getText();
+   }//End Method
+   
+   /**
     * Method to concatenate the {@link Source} and {@link Message} into a readable update.
     * @param source the {@link Source}.
     * @param message the {@link Message}.
