@@ -9,7 +9,6 @@
 package uk.dangrew.sd.core.lockdown;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Supplier;
@@ -20,6 +19,7 @@ import uk.dangrew.sd.core.message.MessageFilter;
 import uk.dangrew.sd.core.progress.Progress;
 import uk.dangrew.sd.core.progress.ProgressFilter;
 import uk.dangrew.sd.core.source.Source;
+import uk.dangrew.sd.utility.synchronization.SynchronizedObservableMap;
 
 /**
  * The {@link DigestManager} is responsible for connecting objects that providing logging
@@ -65,8 +65,8 @@ public class DigestManager {
     * @param timestampProvider the {@link Supplier} to decouple time.
     */
    DigestManager( Supplier< LocalDateTime > timestampProvider ) {
-      this.messageReceivers = Collections.synchronizedMap( new LinkedHashMap<>() );
-      this.progressReceivers = Collections.synchronizedMap( new LinkedHashMap<>() );
+      this.messageReceivers = new SynchronizedObservableMap<>( new LinkedHashMap<>() );
+      this.progressReceivers = new SynchronizedObservableMap<>( new LinkedHashMap<>() );
       this.timestampProvider = timestampProvider;
    }//End Constructor
 
@@ -140,6 +140,32 @@ public class DigestManager {
     */
    void unregisterMessageReceiver( DigestMessageReceiver messageReceiver ) {
       messageReceivers.remove( messageReceiver );
+   }//End Method
+   
+   /**
+    * Method to unregister the given {@link DigestProgressReceiver}. It will no longer receive progress.
+    * @param progressReceiver the {@link DigestProgressReceiver} to unregister.
+    */
+   void unregisterProgressReceiver( DigestProgressReceiver progressReceiver ) {
+      progressReceivers.remove( progressReceiver );
+   }//End Method
+   
+   /**
+    * Method to determine whether the given {@link DigestMessageReceiver} is registered.
+    * @param receiver the {@link DigestMessageReceiver} in question.
+    * @return true if registered.
+    */
+   boolean isRegisteredForMessages( DigestMessageReceiver receiver ) {
+      return messageReceivers.containsKey( receiver );
+   }//End Method
+   
+   /**
+    * Method to determine whether the given {@link DigestProgressReceiver} is registered.
+    * @param receiver the {@link DigestProgressReceiver} in question.
+    * @return true if registered.
+    */
+   boolean isRegisteredForProgress( DigestProgressReceiver receiver ) {
+      return progressReceivers.containsKey( receiver );
    }//End Method
 
 }//End Class

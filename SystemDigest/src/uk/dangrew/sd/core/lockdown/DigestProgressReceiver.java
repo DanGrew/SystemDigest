@@ -16,6 +16,7 @@ import uk.dangrew.sd.core.source.Source;
  * The {@link DigestProgressReceiver} provides an interface for an object that wishes to receive
  * information from the system digest.
  */
+@FunctionalInterface
 public interface DigestProgressReceiver {
    
    /**

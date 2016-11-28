@@ -118,4 +118,12 @@ public class DigestMessageReceiverImplTest {
       }
    }//End Method
    
+   @Test public void shouldIdentifyAsConnectedAndDisconnected(){
+      assertThat( systemUnderTest.isConnected(), is( true ) );
+      systemUnderTest.disconnect();
+      assertThat( systemUnderTest.isConnected(), is( false ) );
+      systemUnderTest.connect();
+      assertThat( systemUnderTest.isConnected(), is( true ) );
+   }//End Method
+   
 }//End Class

@@ -93,10 +93,12 @@ public class DigestFileLoggerTest {
       fireMessage();
       systemUnderTest.iterate();
       verify( protocol ).logToLocation( Mockito.anyString() );
+      assertThat( systemUnderTest.isConnected(), is( true ) );
    }//End Method
    
    @Test public void shouldDisconnectFromDigest() {
       systemUnderTest.disconnect();
+      assertThat( systemUnderTest.isConnected(), is( false ) );
       fireMessage();
       
       for ( int i = 0; i < 10; i++ ) {
@@ -184,4 +186,5 @@ public class DigestFileLoggerTest {
    @Test( expected = IllegalArgumentException.class ) public void shouldNotAccpetNullProtocol(){
       systemUnderTest.setFileLocation( null );
    }//End Method
+   
 }//End Class

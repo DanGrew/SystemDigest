@@ -29,9 +29,6 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import uk.dangrew.sd.core.category.Category;
-import uk.dangrew.sd.core.lockdown.DigestManager;
-import uk.dangrew.sd.core.lockdown.DigestMessageReceiver;
-import uk.dangrew.sd.core.lockdown.DigestProgressReceiver;
 import uk.dangrew.sd.core.message.Message;
 import uk.dangrew.sd.core.message.MessageFilter;
 import uk.dangrew.sd.core.progress.Progress;
@@ -187,6 +184,18 @@ public class DigestManagerTest {
       verify( messageReceiver, times( 1 ) ).log( timestamp, source, category, message );
    }//End Method
    
+   @Test public void shouldUnregisterProgressReceiver(){
+      systemUnderTest.registerProgressReceiver( progressReceiver );
+      systemUnderTest.progress( source, progress, message );
+      verify( progressReceiver, times( 1 ) ).progress( source, progress, message );
+      
+      systemUnderTest.unregisterProgressReceiver( progressReceiver );
+      
+      systemUnderTest.progress( source, progress, message );
+      systemUnderTest.progress( source, progress, message );
+      verify( progressReceiver, times( 1 ) ).progress( source, progress, message );
+   }//End Method
+   
    @Test public void logShouldNotBreakWithConcurrentAccess() throws InterruptedException{
       CountDownLatch latch = new CountDownLatch( 2 );
       
@@ -242,5 +251,19 @@ public class DigestManagerTest {
       ArgumentCaptor< LocalDateTime > timestampCaptor = ArgumentCaptor.forClass( LocalDateTime.class );
       verify( messageReceiver ).log( timestampCaptor.capture(), Mockito.any(), Mockito.any(), Mockito.any() );
       assertThat( timestampCaptor.getValue(), is( notNullValue() ) );
+   }//End Method
+   
+   @Test public void shouldIdentifyRegisteredMessageReceivers(){
+      assertThat( systemUnderTest.isRegisteredForMessages( messageReceiver ), is( false ) );
+      systemUnderTest.registerMessageReceiver( messageReceiver );
+      assertThat( systemUnderTest.isRegisteredForMessages( messageReceiver ), is( true ) );
+      assertThat( systemUnderTest.isRegisteredForMessages( mock( DigestMessageReceiver.class ) ), is( false ) );
+   }//End Method
+   
+   @Test public void shouldIdentifyRegisteredProgressReceivers(){
+      assertThat( systemUnderTest.isRegisteredForProgress( progressReceiver ), is( false ) );
+      systemUnderTest.registerProgressReceiver( progressReceiver );
+      assertThat( systemUnderTest.isRegisteredForProgress( progressReceiver ), is( true ) );
+      assertThat( systemUnderTest.isRegisteredForProgress( mock( DigestProgressReceiver.class ) ), is( false ) );
    }//End Method
 }//End Class

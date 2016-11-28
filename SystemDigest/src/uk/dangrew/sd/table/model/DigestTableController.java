@@ -15,6 +15,7 @@ import com.sun.javafx.application.PlatformImpl;
 import uk.dangrew.sd.core.category.Category;
 import uk.dangrew.sd.core.lockdown.DigestMessageReceiver;
 import uk.dangrew.sd.core.lockdown.DigestMessageReceiverImpl;
+import uk.dangrew.sd.core.lockdown.DigestReceiverConnection;
 import uk.dangrew.sd.core.message.Message;
 import uk.dangrew.sd.core.source.Source;
 import uk.dangrew.sd.table.presentation.DigestTableRowLimit;
@@ -23,10 +24,10 @@ import uk.dangrew.sd.table.presentation.DigestTableRowLimit;
  * The {@link DigestTableController} is responsible for receiving information from the digest
  * and passing it on to the {@link DigestTable} is a format fit for the uk.dangrew.sd.table.
  */
-public class DigestTableController implements DigestMessageReceiver {
+public class DigestTableController implements DigestReceiverConnection, DigestMessageReceiver {
 
    private final DigestTable digestTable;
-   private final DigestMessageReceiver digestConnection;
+   private final DigestReceiverConnection digestConnection;
    private DigestTableRowLimit rowLimit;
    
    /**
@@ -51,6 +52,13 @@ public class DigestTableController implements DigestMessageReceiver {
     */
    @Override public void disconnect() {
       digestConnection.disconnect();
+   }//End Method
+   
+   /**
+    * {@inheritDoc}
+    */
+   @Override public boolean isConnected() {
+      return digestConnection.isConnected();
    }//End Method
    
    /**

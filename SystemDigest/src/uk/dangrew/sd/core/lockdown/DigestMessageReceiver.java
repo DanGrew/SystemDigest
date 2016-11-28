@@ -18,7 +18,8 @@ import uk.dangrew.sd.core.source.Source;
  * The {@link DigestMessageReceiver} provides an interface for an object that wishes to receive
  * information from the system digest for categorised messages.
  */
-public interface DigestMessageReceiver extends DigestReceiver {
+@FunctionalInterface
+public interface DigestMessageReceiver {
    
    /**
     * Method to log a {@link Message} for the given {@link Category} for the given {@link Source}.

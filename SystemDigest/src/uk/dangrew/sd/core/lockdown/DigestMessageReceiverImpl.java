@@ -18,7 +18,7 @@ import uk.dangrew.sd.core.source.Source;
  * The {@link DigestMessageReceiverImpl} is responsible for connecting to the {@link DigestManager}. It
  * should be used to wrap a {@link DigestMessageReceiver} that wants to receive messages the system digest.
  */
-public class DigestMessageReceiverImpl implements DigestMessageReceiver {
+public class DigestMessageReceiverImpl implements DigestReceiverConnection, DigestMessageReceiver {
    
    private DigestMessageReceiver actualReceiver;
    
@@ -50,6 +50,13 @@ public class DigestMessageReceiverImpl implements DigestMessageReceiver {
     */
    @Override public void connect() {
       DigestManager.getInstance().registerMessageReceiver( this );
+   }//End Method
+   
+   /**
+    * {@inheritDoc}
+    */
+   @Override public boolean isConnected() {
+      return DigestManager.getInstance().isRegisteredForMessages( this );
    }//End Method
 
 }//End Class

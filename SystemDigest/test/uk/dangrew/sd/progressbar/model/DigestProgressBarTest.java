@@ -136,5 +136,10 @@ public class DigestProgressBarTest {
       assertThat( systemUnderTest.messageLabel().getText(), isEmptyString() );
       assertThat( systemUnderTest.progressBar().getProgress(), is( -1.0 ) );
    }//End Method
+   
+   @Test public void shouldBeAssociatedWithSource(){
+      assertThat( systemUnderTest.isAssociatedWith( source ), is( true ) );
+      assertThat( systemUnderTest.isAssociatedWith( new SourceImpl( new Object() ) ), is( false ) );
+   }//End Method
 
 }//End Class

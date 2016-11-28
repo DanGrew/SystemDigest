@@ -28,8 +28,8 @@ import uk.dangrew.sd.core.source.Source;
 public class DigestProgressBar extends GridPane {
    
    private final Source source;
-   private ProgressBar progressBar;
-   private Label messageLabel;
+   private final ProgressBar progressBar;
+   private final Label messageLabel;
    
    /**
     * Constructs a new {@link DigestProgressBar}.
@@ -85,6 +85,15 @@ public class DigestProgressBar extends GridPane {
     */
    public String getText(){
       return messageLabel.getText();
+   }//End Method
+   
+   /**
+    * Method to determine whether this is associated with the given.
+    * @param source the {@link Source} in question.
+    * @return true if identical.
+    */
+   public boolean isAssociatedWith( Source source ) {
+      return this.source.equals( source );
    }//End Method
    
    /**

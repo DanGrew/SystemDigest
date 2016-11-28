@@ -12,7 +12,7 @@ package uk.dangrew.sd.core.lockdown;
  * The {@link DigestReceiver} provides a base interface for any objects receiving
  * information from the system digest.
  */
-public interface DigestReceiver {
+public interface DigestReceiverConnection {
    
    /** 
     * Method to disconnect this {@link DigestReceiver} from the system digest.
@@ -25,5 +25,11 @@ public interface DigestReceiver {
     * Safe to call multiple times.
     */
    public void connect();
+   
+   /**
+    * Method to determine whether the receiver is connected.
+    * @return true if connected.
+    */
+   public boolean isConnected();
 
 }//End Interface

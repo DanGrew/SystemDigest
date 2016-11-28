@@ -121,6 +121,14 @@ public class DigestTableControllerTest {
       assertThat( rows.size(), is( 2 ) );
    }//End Method
    
+   @Test public void shouldIdentifyWhenConnected(){
+      assertThat( systemUnderTest.isConnected(), is( true ) );
+      systemUnderTest.disconnect();
+      assertThat( systemUnderTest.isConnected(), is( false ) );
+      systemUnderTest.connect();
+      assertThat( systemUnderTest.isConnected(), is( true ) );
+   }//End Method
+   
    @Test public void shouldLimitRowSizeWhenRowLimitSet(){
       digestSomeMessages( 600 );
       

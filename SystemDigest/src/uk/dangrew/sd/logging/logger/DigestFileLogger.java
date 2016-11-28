@@ -15,6 +15,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import uk.dangrew.sd.core.category.Category;
 import uk.dangrew.sd.core.lockdown.DigestMessageReceiver;
 import uk.dangrew.sd.core.lockdown.DigestMessageReceiverImpl;
+import uk.dangrew.sd.core.lockdown.DigestReceiverConnection;
 import uk.dangrew.sd.core.message.Message;
 import uk.dangrew.sd.core.source.Source;
 import uk.dangrew.sd.logging.location.LoggingLocationProtocol;
@@ -24,9 +25,9 @@ import uk.dangrew.sd.utility.threading.ProtectedRunnable;
  * The {@link DigestFileLogger} is responsible for logging digest {@link Message}s to
  * a {@link LoggingLocationProtocol}.
  */
-public class DigestFileLogger implements ProtectedRunnable, DigestMessageReceiver {
+public class DigestFileLogger implements ProtectedRunnable, DigestReceiverConnection, DigestMessageReceiver {
    
-   private final DigestMessageReceiver receiver;
+   private final DigestReceiverConnection receiver;
    private final BlockingQueue< String > logQueue;
    
    private LoggingLocationProtocol protocol;
@@ -65,6 +66,13 @@ public class DigestFileLogger implements ProtectedRunnable, DigestMessageReceive
     */
    @Override public void connect() {
       receiver.connect();
+   }//End Method
+   
+   /**
+    * {@inheritDoc}
+    */
+   @Override public boolean isConnected() {
+      return receiver.isConnected();
    }//End Method
 
    /**
