@@ -14,6 +14,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -22,6 +23,8 @@ import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import com.sun.javafx.application.PlatformImpl;
 
@@ -36,19 +39,22 @@ import uk.dangrew.sd.digest.object.ObjectDigestImpl;
 import uk.dangrew.sd.graphics.launch.TestApplication;
 import uk.dangrew.sd.table.context.DigestTableContextMenuOpener;
 import uk.dangrew.sd.table.presentation.CategoryColouredCell;
+import uk.dangrew.sd.table.presentation.DigestTableRowLimit;
 
 /**
  * {@link DigestTable} test.
  */
 public class DigestTableTest {
 
+   @Mock private DigestTableController controller;
    private ObjectDigest digest;
    private DigestTable systemUnderTest;
    
    @Before public void initialiseSystemUnderTest(){
       TestApplication.startPlatform();
+      MockitoAnnotations.initMocks( this );
       digest = new ObjectDigestImpl( new SourceImpl( this ) );
-      systemUnderTest = new DigestTable();
+      systemUnderTest = new DigestTable( controller );
    }//End Method
    
    @Ignore
@@ -150,6 +156,7 @@ public class DigestTableTest {
    }//End Method
    
    @Test public void shouldBeConnectedToSystemDigest(){
+      systemUnderTest = new DigestTable();
       assertThat( systemUnderTest.getRows(), hasSize( 0 ) );
       sendDigestMessagesAndWait( Categories.error() );
       assertThat( systemUnderTest.getRows(), hasSize( 1 ) );
@@ -168,6 +175,15 @@ public class DigestTableTest {
    
    @Test public void shouldProvideDigestTableContextMenu(){
       assertThat( systemUnderTest.getOnContextMenuRequested(), instanceOf( DigestTableContextMenuOpener.class ) );
+   }//End Method
+   
+   @Test public void shouldAssociateWithController(){
+      verify( controller ).associate( systemUnderTest );
+   }//End Method
+   
+   @Test public void shouldSetRowLimit(){
+      systemUnderTest.setRowLimit( DigestTableRowLimit.TenThousand );
+      verify( controller ).setTableRowLimit( DigestTableRowLimit.TenThousand );
    }//End Method
    
 }//End Class

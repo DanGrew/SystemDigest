@@ -11,10 +11,13 @@ package uk.dangrew.sd.viewer.basic;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.verify;
 
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import com.sun.javafx.application.PlatformImpl;
 
@@ -28,7 +31,7 @@ import uk.dangrew.sd.digest.object.ObjectDigestImpl;
 import uk.dangrew.sd.graphics.launch.TestApplication;
 import uk.dangrew.sd.progressbar.model.DigestProgressBars;
 import uk.dangrew.sd.table.model.DigestTable;
-import uk.dangrew.sd.viewer.basic.DigestViewer;
+import uk.dangrew.sd.table.presentation.DigestTableRowLimit;
 
 /**
  * {@link DigestViewer} test.
@@ -37,10 +40,13 @@ public class DigestViewerTest {
 
    private static final double WIDTH = 432;
    private static final double HEIGHT = 987;
+   @Mock private DigestTable table; 
    private ObjectDigest thisObjectDigest;
    private DigestViewer systemUnderTest;
    
    @Before public void initialiseSystemUnderTest() throws InterruptedException{
+      TestApplication.startPlatform();
+      MockitoAnnotations.initMocks( this );
       thisObjectDigest = new ObjectDigestImpl( new SourceImpl( this ) );
       
       TestApplication.launch( () -> { 
@@ -98,5 +104,11 @@ public class DigestViewerTest {
       DigestTable table = ( DigestTable )systemUnderTest.getBottom();
       assertThat( table.getPrefWidth(), is( WIDTH ) );
       assertThat( table.getPrefHeight(), is( HEIGHT ) );
+   }//End Method
+   
+   @Test public void shouldApplyTableRowLimit(){
+      systemUnderTest = new DigestViewer( table, WIDTH, HEIGHT );
+      systemUnderTest.setTableRowLimit( DigestTableRowLimit.TenThousand );
+      verify( table ).setRowLimit( DigestTableRowLimit.TenThousand );
    }//End Method
 }//End Class

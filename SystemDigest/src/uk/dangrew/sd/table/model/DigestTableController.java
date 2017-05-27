@@ -26,19 +26,25 @@ import uk.dangrew.sd.table.presentation.DigestTableRowLimit;
  */
 public class DigestTableController implements DigestReceiverConnection, DigestMessageReceiver {
 
-   private final DigestTable digestTable;
    private final DigestReceiverConnection digestConnection;
+   private DigestTable digestTable;
    private DigestTableRowLimit rowLimit;
    
    /**
     * Constructs a new {@link DigestTableController}.
-    * @param digestTable the associated {@link DigestTable}.
     */
-   DigestTableController( DigestTable digestTable ) {
-      this.digestTable = digestTable;
+   DigestTableController() {
       this.digestConnection = new DigestMessageReceiverImpl( this );
       this.rowLimit = DigestTableRowLimit.Unlimited;
    }//End Constructor
+
+   /**
+    * Associates the controller with the given.
+    * @param digestTable the associated {@link DigestTable}.
+    */
+   void associate( DigestTable table ) {
+      this.digestTable = table;
+   }//End Method
    
    /**
     * {@inheritDoc}

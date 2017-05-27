@@ -17,6 +17,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import uk.dangrew.sd.table.context.DigestTableContextMenuOpener;
 import uk.dangrew.sd.table.presentation.CategoryColouredCell;
+import uk.dangrew.sd.table.presentation.DigestTableRowLimit;
 
 /**
  * The {@link DigestTable} provides a simple {@link TableView} that receives logs and {@link uk.dangrew.sd.core.message.Messages}
@@ -35,10 +36,27 @@ public class DigestTable extends TableView< DigestTableRow > {
     * Constructs a new {@link DigestTable}.
     */
    public DigestTable() {
+      this( new DigestTableController() );
+   }//End Constructor
+      
+   /**
+    * Constructs a new {@link DigestTable}.
+    * @param controller the {@link DigestTableController}.
+    */
+   DigestTable( DigestTableController controller ) {
+      this.controller = controller;
+      this.controller.associate( this );
       initialiseColumns();
-      controller = new DigestTableController( this );
       setOnContextMenuRequested( new DigestTableContextMenuOpener( this, controller ) );
    }//End Constructor
+   
+   /**
+    * Setter for the {@link DigestTableRowLimit}, applying ti immediately.
+    * @param limit the {@link DigestTableRowLimit}.
+    */
+   public void setRowLimit( DigestTableRowLimit limit ) {
+      controller.setTableRowLimit( limit );
+   }//End Method
    
    /**
     * Method to get the rows in the {@link DigestTable}. Should be used over {@link #getItems()} because

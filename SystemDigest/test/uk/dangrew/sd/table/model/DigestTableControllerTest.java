@@ -52,7 +52,8 @@ public class DigestTableControllerTest {
       when( digestTable.getRows() ).thenReturn( rows );
       
       objectDigest = new ObjectDigestImpl( new SourceImpl( this ) );
-      systemUnderTest = new DigestTableController( digestTable );
+      systemUnderTest = new DigestTableController();
+      systemUnderTest.associate( digestTable );
    }//End Method
    
    @Test public void shouldForwardMessagesOntoTable() {
