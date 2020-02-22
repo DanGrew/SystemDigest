@@ -46,6 +46,7 @@ sourceSets {
 			srcDir 'src'
         	srcDir 'test'
         }
+        output.resourcesDir = 'build/classes/java/test'
     }
 }
 
