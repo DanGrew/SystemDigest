@@ -73,21 +73,9 @@ public class BasicStringIOTest {
    }//End Method
    
    @Test public void shouldParseTestableFile() {
-      final File file = constructFileFor( EXISITNG_FILE );
-      assertThat( file, is( not( nullValue() ) ) );
-      assertThat( file.exists(), is( true ) );
-      
-      object = systemUnderTest.read( file );
+      object = ioCommon.readFileIntoString(getClass(), EXISITNG_FILE );
       assertThat( object, is( not( nullValue() ) ) );
       assertThat( object, is( "this something was here to begin with" ) );
-   }//End Method
-   
-   @Test( expected = NullPointerException.class ) public void readShouldNotAcceptNullFile(){
-      systemUnderTest.read( null );
-   }//End Method
-   
-   @Test public void readShouldIgnoreNonExistentFile(){
-      assertThat( systemUnderTest.read( new File( "something that does not exist" ) ), is( nullValue() ) );
    }//End Method
    
    @Test( expected = NullPointerException.class ) public void writeShouldNotAcceptNullFile(){
@@ -118,20 +106,8 @@ public class BasicStringIOTest {
       assertThat( systemUnderTest.write( file, output, false ), is( true ) );
       
       assertThat( file.exists(), is( true ) );
-      object = systemUnderTest.read( file );
+      object = ioCommon.readFileIntoString(getClass(), filename );
       assertThat( object.toString(), is( output.toString() ) );
-   }//End Method
-   
-   @Test public void shouldCatchNullStringWhenReadAndAvoidExceptions(){
-      final File file = constructFileFor( EXISITNG_FILE );
-      assertThat( file, is( not( nullValue() ) ) );
-      assertThat( file.exists(), is( true ) );
-      
-      //this should not happen because file issues are handled before - spying to make sure
-      systemUnderTest = spy( systemUnderTest );
-      when( systemUnderTest.readFileIntoString( file ) ).thenReturn( null );
-      
-      assertThat( systemUnderTest.read( file ), is( nullValue() ) );
    }//End Method
    
    @Test public void readFileIntoStringShouldHandleIoExceptionsEvenThoughDefendedAgainst(){
@@ -206,8 +182,8 @@ public class BasicStringIOTest {
       assertThat( systemUnderTest.write( file, logC, true ), is( true ) );
       
       assertThat( file.exists(), is( true ) );
-      object = systemUnderTest.read( file );
-      assertThat( object.toString(), is( logA + logB + logC ) );
+      object = ioCommon.readFileIntoString(getClass(), filename);
+      assertThat( object, is( logA + logB + logC ) );
    }//End Method
    
    @Test public void publicConstructorShouldProvideDigest(){

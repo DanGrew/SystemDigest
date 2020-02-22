@@ -40,18 +40,6 @@ public class BasicStringIO {
    }//End Constructor
 
    /**
-    * Method to read the {@link String} data from the given {@link File}.
-    * @param file the {@link File} to read from.
-    * @return the {@link String} read, or null if anything goes wrong.
-    */
-   public String read( File file ) {
-      if ( !file.exists() ) {
-         return null;
-      }
-      return readFileIntoString( file );
-   }//End Method
-
-   /**
     * Method to read a text file into a {@link String}.
     * @param file the {@link File} to read into a {@link String}.
     * @return the {@link String} containing all text from the {@link File}.
