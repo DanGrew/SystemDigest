@@ -20,6 +20,5 @@ node {
 
         stage 'Publish'
             sh "./gradlew bintrayUpload"
-    
     }
 }
