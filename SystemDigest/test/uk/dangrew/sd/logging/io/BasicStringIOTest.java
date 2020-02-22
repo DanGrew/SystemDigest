@@ -36,6 +36,7 @@ import org.mockito.MockitoAnnotations;
 
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
+import uk.dangrew.kode.utility.io.IoCommon;
 import uk.dangrew.sd.core.lockdown.DigestMessageReceiver;
 import uk.dangrew.sd.core.lockdown.DigestMessageReceiverImpl;
 
@@ -51,13 +52,14 @@ public class BasicStringIOTest {
    
    @Mock private BasicStringIODigest digest;
    private String object;
+   private IoCommon ioCommon;
    private BasicStringIO systemUnderTest;
    
    @Before public void initialiseSystemUnderTest(){
       MockitoAnnotations.initMocks( this );
-      
       object = "i need to write this something to file";
-      systemUnderTest = new BasicStringIO( digest );
+      ioCommon = new IoCommon();
+      systemUnderTest = new BasicStringIO( ioCommon, digest );
       
       File file = constructFileFor( POPULATING_FILE );
       if ( file.exists() ) {
@@ -132,15 +134,10 @@ public class BasicStringIOTest {
       assertThat( systemUnderTest.read( file ), is( nullValue() ) );
    }//End Method
    
-   @Test( expected = IllegalStateException.class ) public void readScannerShouldClose(){
-      Scanner scanner = new Scanner( new StringReader( "anything" ) );
-      systemUnderTest.readScannerContentAndClose( scanner );
-      scanner.next();
-   }//End Method
-   
    @Test public void readFileIntoStringShouldHandleIoExceptionsEvenThoughDefendedAgainst(){
-      systemUnderTest = spy( systemUnderTest );
-      doAnswer( invocation -> { throw new IOException(); } ).when( systemUnderTest ).readScannerContentAndClose( Mockito.any() );
+      ioCommon = mock(IoCommon.class);
+      systemUnderTest = spy( new BasicStringIO(ioCommon, digest) );
+      doAnswer( invocation -> { throw new IOException(); } ).when( ioCommon ).readScannerContentAndClose( Mockito.any() );
       
       final File file = constructFileFor( EXISITNG_FILE );
       assertThat( file, is( not( nullValue() ) ) );
@@ -188,7 +185,7 @@ public class BasicStringIOTest {
       if ( knownResource == null ) {
          fail( EXISITNG_FILE + " shold be present but cannot be found." );
       }
-      
+
       String knownResourcePath = knownResource.getFile();
       if ( !knownResourcePath.contains( fileName ) ) {
          knownResourcePath = knownResourcePath.replace( EXISITNG_FILE, fileName );
@@ -196,7 +193,7 @@ public class BasicStringIOTest {
       
       return new File( knownResourcePath );
    }//End Method
-   
+
    @Parameters( { POPULATING_FILE, SUB_FOLDER_FILE } )
    @Test public void shouldAppendWritesToTestableFile( String filename ) {
       String logA = "first thing logged";

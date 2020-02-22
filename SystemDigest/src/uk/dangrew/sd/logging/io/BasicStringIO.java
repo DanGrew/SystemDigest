@@ -8,32 +8,33 @@
  */
 package uk.dangrew.sd.logging.io;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
+import uk.dangrew.kode.utility.io.IoCommon;
+
+import java.io.*;
 import java.util.Scanner;
 
 /**
  * {@link BasicStringIO} provides basic read and write functionality for files.
  */
 public class BasicStringIO {
-   
+
+   private final IoCommon ioCommon;
    private final BasicStringIODigest digest;
    
    /**
     * Constructs a new {@link BasicStringIO} with a default {@link BasicStringIODigest}.
     */
    public BasicStringIO() {
-      this( new BasicStringIODigest() );
+      this( new IoCommon(), new BasicStringIODigest() );
    }//End Constructor
    
    /**
     * Constructs a new {@link BasicStringIO} with the given {@link BasicStringIODigest}.
+    * @param ioCommon the {@link IoCommon} for reading.
     * @param digest the {@link BasicStringIODigest} to attach to.
     */
-   BasicStringIO( BasicStringIODigest digest ) {
+   BasicStringIO( IoCommon ioCommon, BasicStringIODigest digest ) {
+      this.ioCommon = ioCommon;
       this.digest = digest;
       this.digest.attachSource( this );
    }//End Constructor
@@ -49,18 +50,7 @@ public class BasicStringIO {
       }
       return readFileIntoString( file );
    }//End Method
-   
-   /**
-    * Method to read the given {@link Scanner} and extract a {@link String}.
-    * @param scanner the {@link Scanner} to read.
-    * @return the {@link String} containing all text from the {@link Scanner}.
-    */
-   String readScannerContentAndClose( Scanner scanner ) {
-      String content = scanner.useDelimiter( "//Z" ).next();
-      scanner.close();
-      return content;
-   }//End Method
-   
+
    /**
     * Method to read a text file into a {@link String}.
     * @param file the {@link File} to read into a {@link String}.
@@ -69,11 +59,11 @@ public class BasicStringIO {
    String readFileIntoString( File file ) {
       try ( InputStream stream = new FileInputStream( file ) ){
          Scanner scanner = new Scanner( stream );
-         return readScannerContentAndClose( scanner );
+         return ioCommon.readScannerContentAndClose( scanner );
       } catch ( IOException e ) {
          e.printStackTrace();
          return null;
-      } 
+      }
    }//End Method
 
    /**
