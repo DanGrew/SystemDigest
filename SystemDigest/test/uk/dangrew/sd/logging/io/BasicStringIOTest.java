@@ -23,9 +23,7 @@ import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.StringReader;
 import java.net.URL;
-import java.util.Scanner;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -46,7 +44,7 @@ import uk.dangrew.sd.core.lockdown.DigestMessageReceiverImpl;
 @RunWith( JUnitParamsRunner.class )
 public class BasicStringIOTest {
 
-   private static final String EXISITNG_FILE = "existing-file.txt";
+   private static final String EXISTING_FILE = "existing-file.txt";
    private static final String POPULATING_FILE = "populating-file.txt";
    private static final String SUB_FOLDER_FILE = "testing/populating-file.txt";
    
@@ -59,7 +57,7 @@ public class BasicStringIOTest {
       MockitoAnnotations.initMocks( this );
       object = "i need to write this something to file";
       ioCommon = new IoCommon();
-      systemUnderTest = new BasicStringIO( ioCommon, digest );
+      systemUnderTest = new BasicStringIO( digest );
       
       File file = constructFileFor( POPULATING_FILE );
       if ( file.exists() ) {
@@ -73,7 +71,7 @@ public class BasicStringIOTest {
    }//End Method
    
    @Test public void shouldParseTestableFile() {
-      object = ioCommon.readFileIntoString(getClass(), EXISITNG_FILE );
+      object = ioCommon.readFileIntoString(getClass(), EXISTING_FILE);
       assertThat( object, is( not( nullValue() ) ) );
       assertThat( object, is( "this something was here to begin with" ) );
    }//End Method
@@ -93,12 +91,6 @@ public class BasicStringIOTest {
    }//End Method
    
    @Parameters( { POPULATING_FILE, SUB_FOLDER_FILE } )
-   @Test public void writeShouldConstructNonExistentFile( String file ){
-      assertThat( BasicStringIOTest.class.getResource( file ), is( nullValue() ) );
-      shouldWriteTestableFile( file );
-   }//End Method
-   
-   @Parameters( { POPULATING_FILE, SUB_FOLDER_FILE } )
    @Test public void shouldWriteTestableFile( String filename ) {
       String output = "@Test public void shouldWriteTestableFile( String filename ) {";
       
@@ -106,19 +98,8 @@ public class BasicStringIOTest {
       assertThat( systemUnderTest.write( file, output, false ), is( true ) );
       
       assertThat( file.exists(), is( true ) );
-      object = ioCommon.readFileIntoString(getClass(), filename );
-      assertThat( object.toString(), is( output.toString() ) );
-   }//End Method
-   
-   @Test public void readFileIntoStringShouldHandleIoExceptionsEvenThoughDefendedAgainst(){
-      ioCommon = mock(IoCommon.class);
-      systemUnderTest = spy( new BasicStringIO(ioCommon, digest) );
-      doAnswer( invocation -> { throw new IOException(); } ).when( ioCommon ).readScannerContentAndClose( Mockito.any() );
-      
-      final File file = constructFileFor( EXISITNG_FILE );
-      assertThat( file, is( not( nullValue() ) ) );
-      assertThat( file.exists(), is( true ) );
-      assertThat( systemUnderTest.readFileIntoString( file ), is( nullValue() ) );
+      object = ioCommon.readFileIntoString(getClass(), filename);
+      assertThat( object, is( output ) );
    }//End Method
    
    @Parameters( { POPULATING_FILE, SUB_FOLDER_FILE } )
@@ -157,14 +138,14 @@ public class BasicStringIOTest {
     * @return the {@link File}, not necessarily one that exists.
     */
    private File constructFileFor( String fileName ) {
-      URL knownResource = BasicStringIOTest.class.getResource( EXISITNG_FILE );
+      URL knownResource = BasicStringIOTest.class.getResource(EXISTING_FILE);
       if ( knownResource == null ) {
-         fail( EXISITNG_FILE + " shold be present but cannot be found." );
+         fail( EXISTING_FILE + " should be present but cannot be found." );
       }
 
       String knownResourcePath = knownResource.getFile();
       if ( !knownResourcePath.contains( fileName ) ) {
-         knownResourcePath = knownResourcePath.replace( EXISITNG_FILE, fileName );
+         knownResourcePath = knownResourcePath.replace(EXISTING_FILE, fileName );
       }
       
       return new File( knownResourcePath );

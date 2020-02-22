@@ -18,41 +18,23 @@ import java.util.Scanner;
  */
 public class BasicStringIO {
 
-   private final IoCommon ioCommon;
    private final BasicStringIODigest digest;
    
    /**
     * Constructs a new {@link BasicStringIO} with a default {@link BasicStringIODigest}.
     */
    public BasicStringIO() {
-      this( new IoCommon(), new BasicStringIODigest() );
+      this( new BasicStringIODigest() );
    }//End Constructor
    
    /**
     * Constructs a new {@link BasicStringIO} with the given {@link BasicStringIODigest}.
-    * @param ioCommon the {@link IoCommon} for reading.
     * @param digest the {@link BasicStringIODigest} to attach to.
     */
-   BasicStringIO( IoCommon ioCommon, BasicStringIODigest digest ) {
-      this.ioCommon = ioCommon;
+   BasicStringIO( BasicStringIODigest digest ) {
       this.digest = digest;
       this.digest.attachSource( this );
    }//End Constructor
-
-   /**
-    * Method to read a text file into a {@link String}.
-    * @param file the {@link File} to read into a {@link String}.
-    * @return the {@link String} containing all text from the {@link File}.
-    */
-   String readFileIntoString( File file ) {
-      try ( InputStream stream = new FileInputStream( file ) ){
-         Scanner scanner = new Scanner( stream );
-         return ioCommon.readScannerContentAndClose( scanner );
-      } catch ( IOException e ) {
-         e.printStackTrace();
-         return null;
-      }
-   }//End Method
 
    /**
     * Method to write the given {@link String} to the given {@link File}.
