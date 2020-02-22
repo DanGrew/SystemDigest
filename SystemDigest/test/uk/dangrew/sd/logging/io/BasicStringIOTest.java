@@ -26,7 +26,9 @@ import java.io.IOException;
 import java.net.URL;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -47,7 +49,10 @@ public class BasicStringIOTest {
    private static final String EXISTING_FILE = "existing-file.txt";
    private static final String POPULATING_FILE = "populating-file.txt";
    private static final String SUB_FOLDER_FILE = "testing/populating-file.txt";
-   
+
+   @Rule
+   public TemporaryFolder temporaryFolder = new TemporaryFolder();
+
    @Mock private BasicStringIODigest digest;
    private String object;
    private IoCommon ioCommon;
@@ -59,21 +64,15 @@ public class BasicStringIOTest {
       ioCommon = new IoCommon();
       systemUnderTest = new BasicStringIO( digest );
       
-      File file = constructFileFor( POPULATING_FILE );
-      if ( file.exists() ) {
-         file.delete();
-      }
-      
-      File subfolderFile = constructFileFor( SUB_FOLDER_FILE );
-      if ( subfolderFile.exists() ) {
-         subfolderFile.delete();
-      }
-   }//End Method
-   
-   @Test public void shouldParseTestableFile() {
-      object = ioCommon.readFileIntoString(getClass(), EXISTING_FILE);
-      assertThat( object, is( not( nullValue() ) ) );
-      assertThat( object, is( "this something was here to begin with" ) );
+//      File file = constructFileFor( POPULATING_FILE );
+//      if ( file.exists() ) {
+//         file.delete();
+//      }
+//
+//      File subfolderFile = constructFileFor( SUB_FOLDER_FILE );
+//      if ( subfolderFile.exists() ) {
+//         subfolderFile.delete();
+//      }
    }//End Method
    
    @Test( expected = NullPointerException.class ) public void writeShouldNotAcceptNullFile(){
@@ -90,30 +89,60 @@ public class BasicStringIOTest {
       }
    }//End Method
    
-   @Parameters( { POPULATING_FILE, SUB_FOLDER_FILE } )
-   @Test public void shouldWriteTestableFile( String filename ) {
+//   @Parameters( { POPULATING_FILE, SUB_FOLDER_FILE } )
+//   @Test public void shouldWriteTestableFile( String filename ) {
+//      String output = "@Test public void shouldWriteTestableFile( String filename ) {";
+//
+//      final File file = constructFileFor( filename );
+//      assertThat( systemUnderTest.write( file, output, false ), is( true ) );
+//
+//      assertThat( file.exists(), is( true ) );
+//      object = ioCommon.readFileIntoString(file);
+//      assertThat( object, is( output ) );
+//   }//End Method
+
+   @Test public void shouldWriteContentsToNonCreatedFile() throws IOException {
       String output = "@Test public void shouldWriteTestableFile( String filename ) {";
-      
-      final File file = constructFileFor( filename );
+
+      final File file = temporaryFolder.newFile();
+      file.delete();
+      assertThat(file.exists(), is(false));
+
       assertThat( systemUnderTest.write( file, output, false ), is( true ) );
-      
+
       assertThat( file.exists(), is( true ) );
-      object = ioCommon.readFileIntoString(getClass(), filename);
+      object = ioCommon.readFileIntoString(file);
       assertThat( object, is( output ) );
    }//End Method
-   
-   @Parameters( { POPULATING_FILE, SUB_FOLDER_FILE } )
-   @Test public void writeShouldUseFileThatAlreadyExists( String filename ) throws IOException{
-      final File file = constructFileFor( filename );
-      assertThat( file, is( not( nullValue() ) ) );
-      assertThat( file.exists(), is( false ) );
-      
-      file.getParentFile().mkdirs();
-      file.createNewFile();
-      
-      shouldWriteTestableFile( filename );
+
+   @Test public void shouldWriteContentsToNonCreatedFileWithinNonCreatedFolder() throws IOException {
+      String output = "@Test public void shouldWriteTestableFile( String filename ) {";
+
+      final File file = temporaryFolder.newFolder();
+      file.delete();
+      assertThat(file.exists(), is(false));
+
+      final File toWriteTo = new File(file.getAbsolutePath() + POPULATING_FILE);
+      assertThat(toWriteTo.exists(), is(false));
+
+      assertThat( systemUnderTest.write( toWriteTo, output, false ), is( true ) );
+
+      assertThat( toWriteTo.exists(), is( true ) );
+      object = ioCommon.readFileIntoString(toWriteTo);
+      assertThat( object, is( output ) );
    }//End Method
-   
+
+   @Test public void shouldWriteContentsToCreatedFile() throws IOException {
+      String output = "@Test public void shouldWriteTestableFile( String filename ) {";
+
+      final File file = temporaryFolder.newFile();
+      assertThat(file.exists(), is(true));
+
+      assertThat( systemUnderTest.write( file, output, false ), is( true ) );
+      object = ioCommon.readFileIntoString(file);
+      assertThat( object, is( output ) );
+   }//End Method
+
    @Test public void writeShouldFailGracefullyIfFileCannotBeCreated() throws IOException{
       File file = mock( File.class );
       when( file.exists() ).thenReturn( false );
@@ -132,38 +161,18 @@ public class BasicStringIOTest {
       verify( digest ).failedToWriteToFile( Mockito.eq( file ), Mockito.any() );
    }//End Method
    
-   /**
-    * Method to construct the {@link File} for the given filename in the current package.
-    * @param fileName the filename to construct for.
-    * @return the {@link File}, not necessarily one that exists.
-    */
-   private File constructFileFor( String fileName ) {
-      URL knownResource = BasicStringIOTest.class.getResource(EXISTING_FILE);
-      if ( knownResource == null ) {
-         fail( EXISTING_FILE + " should be present but cannot be found." );
-      }
-
-      String knownResourcePath = knownResource.getFile();
-      if ( !knownResourcePath.contains( fileName ) ) {
-         knownResourcePath = knownResourcePath.replace(EXISTING_FILE, fileName );
-      }
-      
-      return new File( knownResourcePath );
-   }//End Method
-
-   @Parameters( { POPULATING_FILE, SUB_FOLDER_FILE } )
-   @Test public void shouldAppendWritesToTestableFile( String filename ) {
+   @Test public void shouldAppendWritesToTestableFile() throws IOException {
       String logA = "first thing logged";
       String logB = "another logging";
       String logC = "a catastrophe";
       
-      final File file = constructFileFor( filename );
+      final File file = temporaryFolder.newFile();
       assertThat( systemUnderTest.write( file, logA, true ), is( true ) );
       assertThat( systemUnderTest.write( file, logB, true ), is( true ) );
       assertThat( systemUnderTest.write( file, logC, true ), is( true ) );
       
       assertThat( file.exists(), is( true ) );
-      object = ioCommon.readFileIntoString(getClass(), filename);
+      object = ioCommon.readFileIntoString(file);
       assertThat( object, is( logA + logB + logC ) );
    }//End Method
    
