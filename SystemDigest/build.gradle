@@ -2,7 +2,7 @@
  * PLUGINS: apply all plugins needed for the build
  */
 plugins {
-    id "com.jfrog.bintray" version "1.6"
+    id "com.jfrog.bintray" version "1.8.1"
 }
 
 allprojects { 
@@ -53,7 +53,7 @@ sourceSets {
  * DEPENDENCIES: define repo for resolving dependencies, and the dependencies themselves
  */
 repositories {
-     maven { url "http://repo.maven.apache.org/maven2" } 
+     mavenCentral()
 }
 
 dependencies {

@@ -38,6 +38,7 @@ public class Categories {
     * @return the {@link Category}.
     */
    public static Category information() {
+
       return INFORMATION;
    }//End Method
    
