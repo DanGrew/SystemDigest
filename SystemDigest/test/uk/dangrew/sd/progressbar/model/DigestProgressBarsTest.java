@@ -23,6 +23,7 @@ import org.mockito.MockitoAnnotations;
 
 import com.sun.javafx.application.PlatformImpl;
 
+import uk.dangrew.kode.launch.TestApplication;
 import uk.dangrew.sd.core.message.Message;
 import uk.dangrew.sd.core.message.Messages;
 import uk.dangrew.sd.core.progress.Progress;
@@ -32,9 +33,6 @@ import uk.dangrew.sd.core.source.Source;
 import uk.dangrew.sd.core.source.SourceImpl;
 import uk.dangrew.sd.digest.object.ObjectDigest;
 import uk.dangrew.sd.digest.object.ObjectDigestImpl;
-import uk.dangrew.sd.graphics.launch.TestApplication;
-import uk.dangrew.sd.progressbar.model.DigestProgressBar;
-import uk.dangrew.sd.progressbar.model.DigestProgressBars;
 
 /**
  * {@link DigestProgressBars} test.
@@ -51,8 +49,8 @@ public class DigestProgressBarsTest {
       source = new SourceImpl( this );
       objectDigest = new ObjectDigestImpl( source );
       MockitoAnnotations.initMocks( this );
-      
-      TestApplication.launch( () -> { 
+
+      TestApplication.launch( () -> {
          systemUnderTest = new DigestProgressBars();
          return systemUnderTest;
       } );

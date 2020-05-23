@@ -30,13 +30,13 @@ import com.sun.javafx.application.PlatformImpl;
 
 import javafx.scene.control.TableColumn;
 import javafx.scene.layout.BorderPane;
+import uk.dangrew.kode.launch.TestApplication;
 import uk.dangrew.sd.core.category.Categories;
 import uk.dangrew.sd.core.category.Category;
 import uk.dangrew.sd.core.message.Messages;
 import uk.dangrew.sd.core.source.SourceImpl;
 import uk.dangrew.sd.digest.object.ObjectDigest;
 import uk.dangrew.sd.digest.object.ObjectDigestImpl;
-import uk.dangrew.sd.graphics.launch.TestApplication;
 import uk.dangrew.sd.table.context.DigestTableContextMenuOpener;
 import uk.dangrew.sd.table.presentation.CategoryColouredCell;
 import uk.dangrew.sd.table.presentation.DigestTableRowLimit;

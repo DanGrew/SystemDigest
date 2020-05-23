@@ -20,10 +20,9 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import javafx.scene.control.TableRow;
+import uk.dangrew.kode.launch.TestApplication;
 import uk.dangrew.sd.core.category.Categories;
-import uk.dangrew.sd.graphics.launch.TestApplication;
 import uk.dangrew.sd.table.model.DigestTableRow;
-import uk.dangrew.sd.table.presentation.CategoryColouredCell;
 
 /**
  * {@link CategoryColouredCell} test.

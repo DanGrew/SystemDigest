@@ -22,12 +22,12 @@ import com.sun.javafx.application.PlatformImpl;
 
 import javafx.geometry.Pos;
 import javafx.scene.layout.ColumnConstraints;
+import uk.dangrew.kode.launch.TestApplication;
 import uk.dangrew.sd.core.message.Messages;
 import uk.dangrew.sd.core.progress.ProgressImpl;
 import uk.dangrew.sd.core.progress.Progresses;
 import uk.dangrew.sd.core.source.Source;
 import uk.dangrew.sd.core.source.SourceImpl;
-import uk.dangrew.sd.graphics.launch.TestApplication;
 import uk.dangrew.sd.utility.TestCommon;
 
 /**
@@ -39,7 +39,7 @@ public class DigestProgressBarTest {
    private DigestProgressBar systemUnderTest;
    
    @Before public void initialiseSystemUnderTest() throws InterruptedException{
-      TestApplication.launch( () -> { 
+      TestApplication.launch( () -> {
          source = new SourceImpl( this );
          systemUnderTest = new DigestProgressBar( source );
          return systemUnderTest;

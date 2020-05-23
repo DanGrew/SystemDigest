@@ -21,6 +21,7 @@ import org.mockito.MockitoAnnotations;
 
 import com.sun.javafx.application.PlatformImpl;
 
+import uk.dangrew.kode.launch.TestApplication;
 import uk.dangrew.sd.core.category.Categories;
 import uk.dangrew.sd.core.message.Messages;
 import uk.dangrew.sd.core.progress.ProgressImpl;
@@ -28,7 +29,6 @@ import uk.dangrew.sd.core.progress.Progresses;
 import uk.dangrew.sd.core.source.SourceImpl;
 import uk.dangrew.sd.digest.object.ObjectDigest;
 import uk.dangrew.sd.digest.object.ObjectDigestImpl;
-import uk.dangrew.sd.graphics.launch.TestApplication;
 import uk.dangrew.sd.progressbar.model.DigestProgressBars;
 import uk.dangrew.sd.table.model.DigestTable;
 import uk.dangrew.sd.table.presentation.DigestTableRowLimit;
