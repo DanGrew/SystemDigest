@@ -49,7 +49,7 @@ public class DigestProgressBarsTest {
       source = new SourceImpl( this );
       objectDigest = new ObjectDigestImpl( source );
       MockitoAnnotations.initMocks( this );
-
+      
       TestApplication.launch( () -> {
          systemUnderTest = new DigestProgressBars();
          return systemUnderTest;

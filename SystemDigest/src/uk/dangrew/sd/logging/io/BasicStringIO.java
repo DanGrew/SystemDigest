@@ -10,18 +10,14 @@ package uk.dangrew.sd.logging.io;
 
 import uk.dangrew.kode.utility.io.IoCommon;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.Scanner;
 
 /**
  * {@link BasicStringIO} provides basic read and write functionality for files.
  */
 public class BasicStringIO {
-   
+
    private final IoCommon ioCommon;
    private final BasicStringIODigest digest;
    
@@ -54,18 +50,7 @@ public class BasicStringIO {
       }
       return readFileIntoString( file );
    }//End Method
-   
-   /**
-    * Method to read the given {@link Scanner} and extract a {@link String}.
-    * @param scanner the {@link Scanner} to read.
-    * @return the {@link String} containing all text from the {@link Scanner}.
-    */
-   String readScannerContentAndClose( Scanner scanner ) {
-      String content = scanner.useDelimiter( "//Z" ).next();
-      scanner.close();
-      return content;
-   }//End Method
-   
+
    /**
     * Method to read a text file into a {@link String}.
     * @param file the {@link File} to read into a {@link String}.
@@ -74,11 +59,11 @@ public class BasicStringIO {
    String readFileIntoString( File file ) {
       try ( InputStream stream = new FileInputStream( file ) ){
          Scanner scanner = new Scanner( stream );
-         return readScannerContentAndClose( scanner );
+         return ioCommon.readScannerContentAndClose( scanner );
       } catch ( IOException e ) {
          e.printStackTrace();
          return null;
-      } 
+      }
    }//End Method
 
    /**

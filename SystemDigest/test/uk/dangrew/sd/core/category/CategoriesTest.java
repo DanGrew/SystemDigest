@@ -16,13 +16,7 @@ import static org.mockito.Mockito.mock;
 
 import org.junit.Test;
 
-import uk.dangrew.sd.core.category.Categories;
-import uk.dangrew.sd.core.category.Category;
-import uk.dangrew.sd.core.category.Error;
-import uk.dangrew.sd.core.category.Information;
-import uk.dangrew.sd.core.category.ObjectAllocation;
-import uk.dangrew.sd.core.category.ProcessingSequence;
-import uk.dangrew.sd.core.category.Status;
+import uk.dangrew.kode.launch.TestApplication;
 import uk.dangrew.sd.core.message.Message;
 import uk.dangrew.sd.core.message.MessageFilter;
 import uk.dangrew.sd.core.source.Source;
@@ -33,6 +27,7 @@ import uk.dangrew.sd.core.source.Source;
 public class CategoriesTest {
 
    @Test public void shouldProvideConsistentError() {
+      TestApplication.launch();
       Category error = Categories.error();
       assertThat( error, notNullValue() );
       
