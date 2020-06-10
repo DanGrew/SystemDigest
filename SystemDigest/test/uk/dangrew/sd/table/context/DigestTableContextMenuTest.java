@@ -24,8 +24,6 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import com.sun.javafx.application.PlatformImpl;
-
 import javafx.event.ActionEvent;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
@@ -33,6 +31,7 @@ import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.ContextMenuEvent;
+import uk.dangrew.kode.javafx.platform.JavaFxThreading;
 import uk.dangrew.kode.launch.TestApplication;
 import uk.dangrew.sd.core.category.Categories;
 import uk.dangrew.sd.core.message.Messages;
@@ -60,7 +59,7 @@ public class DigestTableContextMenuTest {
    private DigestTableContextMenuOpener opener;
    
    @BeforeClass public static void initialisePlatform(){
-      PlatformImpl.startup( () -> {} );
+      JavaFxThreading.startup();
    }//End Method
    
    @Before public void initialiseSystemUnderTest(){
@@ -128,11 +127,11 @@ public class DigestTableContextMenuTest {
    
    @Test public void cancelShouldHideWhenUsingHeavySetup() throws InterruptedException{
       fullLaunch();
-      PlatformImpl.runAndWait( () -> {
+      JavaFxThreading.runAndWait( () -> {
          opener.handle( new ContextMenuEvent( null, 0, 0, 0, 0, false, null ) );
       } );
       assertThat( systemUnderTest.friendly_isShowing(), is( true ) );
-      PlatformImpl.runAndWait( () -> {
+      JavaFxThreading.runAndWait( () -> {
          retrieveMenuItem( CANCEL ).getOnAction().handle( new ActionEvent() );
       } );
       assertThat( systemUnderTest.friendly_isShowing(), is( false ) );

@@ -21,8 +21,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
 
-import com.sun.javafx.application.PlatformImpl;
-
+import uk.dangrew.kode.javafx.platform.JavaFxThreading;
 import uk.dangrew.kode.launch.TestApplication;
 import uk.dangrew.sd.core.message.Message;
 import uk.dangrew.sd.core.message.Messages;
@@ -61,7 +60,7 @@ public class DigestProgressBarsTest {
       final Object object = new Object();
       for ( int i = 0; i < 101; i++ ) {
          final int j = i;
-         PlatformImpl.runAndWait( () -> {
+         JavaFxThreading.runAndWait( () -> {
             systemUnderTest.handleProgress( new SourceImpl( this ), new ProgressImpl( j / 100.0 ), Messages.simpleMessage( "looping " + j ) );
             if ( j < 51 ) {
                systemUnderTest.handleProgress( new SourceImpl( object ), new ProgressImpl( j / 50.0 ), Messages.simpleMessage( "looping " + j ) );
@@ -75,7 +74,7 @@ public class DigestProgressBarsTest {
             }
          } );
       }
-      PlatformImpl.runAndWait( () -> {
+      JavaFxThreading.runAndWait( () -> {
          systemUnderTest.handleProgress( new SourceImpl( this ), Progresses.complete(), Messages.simpleMessage( "done" ) );
       } );
       Thread.sleep( 1000000 );
@@ -92,7 +91,7 @@ public class DigestProgressBarsTest {
       message = Messages.simpleMessage( "some special message" );
       
       objectDigest.progress( progress, message );
-      PlatformImpl.runAndWait( () -> {} );
+      JavaFxThreading.runAndWait();
       assertThat( systemUnderTest.progressLayout().getChildren(), hasSize( 1 ) );
       
       DigestProgressBar progressBar = ( DigestProgressBar )systemUnderTest.progressLayout().getChildren().get( 0 );
@@ -108,8 +107,8 @@ public class DigestProgressBarsTest {
       new ObjectDigestImpl( new SourceImpl( new Object() ) ).progress( progress, message );
       new ObjectDigestImpl( new SourceImpl( new Object() ) ).progress( progress, message );
       new ObjectDigestImpl( new SourceImpl( new Object() ) ).progress( progress, message );
-      
-      PlatformImpl.runAndWait( () -> {} );
+
+      JavaFxThreading.runAndWait();
       assertThat( systemUnderTest.progressLayout().getChildren(), hasSize( 4 ) );
    }//End Method
    
@@ -130,8 +129,8 @@ public class DigestProgressBarsTest {
       Source sourceC = new SourceImpl( new Object() );
       ObjectDigest objectDigestC = new ObjectDigestImpl( sourceC );
       objectDigestC.progress( progress, message );
-      
-      PlatformImpl.runAndWait( () -> {} );
+
+      JavaFxThreading.runAndWait();
       assertThat( systemUnderTest.progressLayout().getChildren(), hasSize( 4 ) );
       
       DigestProgressBar objectDigestBar = systemUnderTest.digestProgressBar( source );
@@ -145,8 +144,8 @@ public class DigestProgressBarsTest {
       
       objectDigestA.progress( Progresses.complete(), message );
       objectDigestC.progress( Progresses.complete(), message );
-      
-      PlatformImpl.runAndWait( () -> {} );
+
+      JavaFxThreading.runAndWait();
       assertThat( systemUnderTest.progressLayout().getChildren(), hasSize( 2 ) );
       
       assertThat( systemUnderTest.digestProgressBar( source ), is( objectDigestBar ) );
@@ -175,8 +174,8 @@ public class DigestProgressBarsTest {
       Source sourceC = new SourceImpl( new Object() );
       ObjectDigest objectDigestC = new ObjectDigestImpl( sourceC );
       objectDigestC.progress( progressC, message );
-      
-      PlatformImpl.runAndWait( () -> {} );
+
+      JavaFxThreading.runAndWait();
       assertThat( systemUnderTest.progressLayout().getChildren(), hasSize( 4 ) );
       
       assertThat( 
@@ -198,8 +197,8 @@ public class DigestProgressBarsTest {
       
       progress = new ProgressImpl( 79.654 );
       objectDigest.progress( progress, message );
-      
-      PlatformImpl.runAndWait( () -> {} );
+
+      JavaFxThreading.runAndWait();
       assertThat( systemUnderTest.progressLayout().getChildren(), hasSize( 4 ) );
       
       assertThat( 

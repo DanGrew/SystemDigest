@@ -8,28 +8,15 @@
  */
  package uk.dangrew.sd.table.model;
 
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.instanceOf;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-
+import javafx.scene.control.TableColumn;
+import javafx.scene.layout.BorderPane;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-
-import com.sun.javafx.application.PlatformImpl;
-
-import javafx.scene.control.TableColumn;
-import javafx.scene.layout.BorderPane;
+import uk.dangrew.kode.javafx.platform.JavaFxThreading;
 import uk.dangrew.kode.launch.TestApplication;
 import uk.dangrew.sd.core.category.Categories;
 import uk.dangrew.sd.core.category.Category;
@@ -40,6 +27,14 @@ import uk.dangrew.sd.digest.object.ObjectDigestImpl;
 import uk.dangrew.sd.table.context.DigestTableContextMenuOpener;
 import uk.dangrew.sd.table.presentation.CategoryColouredCell;
 import uk.dangrew.sd.table.presentation.DigestTableRowLimit;
+
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 /**
  * {@link DigestTable} test.
@@ -170,7 +165,7 @@ public class DigestTableTest {
       for ( Category category : categories ) {
          digest.log( category, Messages.simpleMessage( "any message" ) );
       }
-      PlatformImpl.runAndWait( () -> {} );
+      JavaFxThreading.runAndWait();
    }//End Method
    
    @Test public void shouldProvideDigestTableContextMenu(){

@@ -16,6 +16,7 @@ import static org.mockito.Mockito.mock;
 
 import org.junit.Test;
 
+import uk.dangrew.kode.javafx.platform.JavaFxThreading;
 import uk.dangrew.kode.launch.TestApplication;
 import uk.dangrew.sd.core.message.Message;
 import uk.dangrew.sd.core.message.MessageFilter;
@@ -27,7 +28,7 @@ import uk.dangrew.sd.core.source.Source;
 public class CategoriesTest {
 
    @Test public void shouldProvideConsistentError() {
-      TestApplication.launch();
+      JavaFxThreading.startup();
       Category error = Categories.error();
       assertThat( error, notNullValue() );
       

@@ -8,8 +8,6 @@
  */
 package uk.dangrew.sd.progressbar.model;
 
-import com.sun.javafx.application.PlatformImpl;
-
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
@@ -17,6 +15,7 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import uk.dangrew.kode.javafx.platform.JavaFxThreading;
 import uk.dangrew.sd.core.message.Message;
 import uk.dangrew.sd.core.progress.Progress;
 import uk.dangrew.sd.core.source.Source;
@@ -65,7 +64,7 @@ public class DigestProgressBar extends GridPane {
       if ( !source.equals( this.source ) ) {
          return;
       }
-      PlatformImpl.runAndWait( () -> {
+      JavaFxThreading.runAndWait( () -> {
          progressBar.setProgress( Progress.percentageToProgress( progress.getPercentage() ) );
          messageLabel.setText( concatenateSourceAndMessage( source, message ) );
       } );

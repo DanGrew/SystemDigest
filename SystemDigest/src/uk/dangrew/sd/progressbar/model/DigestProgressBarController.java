@@ -8,8 +8,7 @@
  */
 package uk.dangrew.sd.progressbar.model;
 
-import com.sun.javafx.application.PlatformImpl;
-
+import uk.dangrew.kode.javafx.platform.JavaFxThreading;
 import uk.dangrew.sd.core.lockdown.DigestProgressReceiver;
 import uk.dangrew.sd.core.lockdown.DigestProgressReceiverImpl;
 import uk.dangrew.sd.core.message.Message;
@@ -37,7 +36,7 @@ public class DigestProgressBarController implements DigestProgressReceiver {
     * {@inheritDoc}
     */
    @Override public void progress( Source source, Progress progress, Message message ) {
-      PlatformImpl.runLater( () -> {
+      JavaFxThreading.runLater( () -> {
          digestProgressBars.handleProgress( source, progress, message );
       } );
    }//End Method

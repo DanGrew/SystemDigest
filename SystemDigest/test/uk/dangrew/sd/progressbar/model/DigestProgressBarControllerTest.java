@@ -8,26 +8,22 @@
  */
  package uk.dangrew.sd.progressbar.model;
 
-import static org.mockito.Mockito.verify;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-
-import com.sun.javafx.application.PlatformImpl;
-
+import uk.dangrew.kode.javafx.platform.JavaFxThreading;
 import uk.dangrew.sd.core.message.Message;
 import uk.dangrew.sd.core.progress.Progress;
 import uk.dangrew.sd.core.source.Source;
 import uk.dangrew.sd.core.source.SourceImpl;
 import uk.dangrew.sd.digest.object.ObjectDigest;
 import uk.dangrew.sd.digest.object.ObjectDigestImpl;
-import uk.dangrew.sd.progressbar.model.DigestProgressBarController;
-import uk.dangrew.sd.progressbar.model.DigestProgressBars;
+
+import static org.mockito.Mockito.verify;
 
 /**
- * {@link DigestTableController} test.
+ * {@link uk.dangrew.sd.table.model.DigestTableController} test.
  */
 public class DigestProgressBarControllerTest {
 
@@ -39,7 +35,7 @@ public class DigestProgressBarControllerTest {
    private DigestProgressBarController systemUnderTest;
    
    @Before public void initialiseSystemUnderTest(){
-      PlatformImpl.startup( () -> {} );
+      JavaFxThreading.startup();
       MockitoAnnotations.initMocks( this );
       
       source = new SourceImpl( this );
@@ -49,8 +45,8 @@ public class DigestProgressBarControllerTest {
    
    @Test public void shouldForwardMessagesOntoBar() {
       objectDigest.progress( progress, message );
-      
-      PlatformImpl.runAndWait( () -> {} );
+
+      JavaFxThreading.runAndWait();
       verify( digestProgressBar ).handleProgress( source, progress, message );
    }//End Method
    

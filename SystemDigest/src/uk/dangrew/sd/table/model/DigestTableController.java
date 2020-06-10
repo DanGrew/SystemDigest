@@ -10,8 +10,7 @@
 
 import java.time.LocalDateTime;
 
-import com.sun.javafx.application.PlatformImpl;
-
+import uk.dangrew.kode.javafx.platform.JavaFxThreading;
 import uk.dangrew.sd.core.category.Category;
 import uk.dangrew.sd.core.lockdown.DigestMessageReceiver;
 import uk.dangrew.sd.core.lockdown.DigestMessageReceiverImpl;
@@ -40,7 +39,7 @@ public class DigestTableController implements DigestReceiverConnection, DigestMe
 
    /**
     * Associates the controller with the given.
-    * @param digestTable the associated {@link DigestTable}.
+    * @param table the associated {@link DigestTable}.
     */
    void associate( DigestTable table ) {
       this.digestTable = table;
@@ -79,7 +78,7 @@ public class DigestTableController implements DigestReceiverConnection, DigestMe
       }
       
       if ( limit != this.rowLimit ) {
-         PlatformImpl.runLater( () -> {
+         JavaFxThreading.runLater( () -> {
             limit.limit( digestTable.getRows() );
          } );
       }
@@ -90,7 +89,7 @@ public class DigestTableController implements DigestReceiverConnection, DigestMe
     * Method to clear the {@link DigestTable}.
     */
    public void clearTable() {
-      PlatformImpl.runLater( () -> {
+      JavaFxThreading.runLater( () -> {
          digestTable.getRows().clear();
       } );
    }//End Method
@@ -99,7 +98,7 @@ public class DigestTableController implements DigestReceiverConnection, DigestMe
     * {@inheritDoc}
     */
    @Override public void log( LocalDateTime timestamp, Source source, Category category, Message message ) {
-      PlatformImpl.runLater( () -> {
+      JavaFxThreading.runLater( () -> {
          digestTable.getRows().add( 0, new DigestTableRow( timestamp, source, category, message ) );
          rowLimit.limit( digestTable.getRows() );
       } );

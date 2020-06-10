@@ -18,10 +18,9 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import com.sun.javafx.application.PlatformImpl;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import uk.dangrew.kode.javafx.platform.JavaFxThreading;
 import uk.dangrew.sd.core.category.Category;
 import uk.dangrew.sd.core.message.Message;
 import uk.dangrew.sd.core.message.Messages;
@@ -46,7 +45,7 @@ public class DigestTableControllerTest {
    private DigestTableController systemUnderTest;
    
    @Before public void initialiseSystemUnderTest(){
-      PlatformImpl.startup( () -> {} );
+      JavaFxThreading.startup();
       MockitoAnnotations.initMocks( this );
       rows = FXCollections.observableArrayList();
       when( digestTable.getRows() ).thenReturn( rows );
@@ -58,7 +57,7 @@ public class DigestTableControllerTest {
    
    @Test public void shouldForwardMessagesOntoTable() {
       objectDigest.log( category, message );
-      PlatformImpl.runAndWait( () -> {} );
+      JavaFxThreading.runAndWait();
       assertThat( rows.size(), is( 1 ) );
       
       DigestTableRow row = rows.get( 0 );
@@ -78,8 +77,8 @@ public class DigestTableControllerTest {
       objectDigest.log( category, second );
       objectDigest.log( category, third );
       objectDigest.log( category, fourth );
-      
-      PlatformImpl.runAndWait( () -> {} );
+
+      JavaFxThreading.runAndWait();
       assertThat( rows.size(), is( 5 ) );
       
       assertThat( rows.get( 0 ).getMessage(), is( fourth ) );
@@ -91,7 +90,7 @@ public class DigestTableControllerTest {
    
    @Test public void shouldDisconnectFromDigest(){
       objectDigest.log( category, message );
-      PlatformImpl.runAndWait( () -> {} );
+      JavaFxThreading.runAndWait();
       assertThat( rows.size(), is( 1 ) );
 
       systemUnderTest.disconnect();
@@ -99,7 +98,7 @@ public class DigestTableControllerTest {
       objectDigest.log( category, message );
       objectDigest.log( category, message );
       objectDigest.log( category, message );
-      PlatformImpl.runAndWait( () -> {} );
+      JavaFxThreading.runAndWait();
       
       assertThat( rows.size(), is( 1 ) );
    }//End Method
@@ -110,7 +109,7 @@ public class DigestTableControllerTest {
       objectDigest.log( category, message );
       objectDigest.log( category, message );
       objectDigest.log( category, message );
-      PlatformImpl.runAndWait( () -> {} );
+      JavaFxThreading.runAndWait();
       
       assertThat( rows.size(), is( 0 ) );
       
@@ -118,7 +117,7 @@ public class DigestTableControllerTest {
       
       objectDigest.log( category, message );
       objectDigest.log( category, message );
-      PlatformImpl.runAndWait( () -> {} );
+      JavaFxThreading.runAndWait();
       assertThat( rows.size(), is( 2 ) );
    }//End Method
    
@@ -134,15 +133,15 @@ public class DigestTableControllerTest {
       digestSomeMessages( 600 );
       
       systemUnderTest.setTableRowLimit( DigestTableRowLimit.FiveHundred );
-      PlatformImpl.runAndWait( () -> {} );
+      JavaFxThreading.runAndWait();
       assertThat( rows.size(), is( DigestTableRowLimit.FiveHundred.getLimit() ) );
       
       systemUnderTest.setTableRowLimit( DigestTableRowLimit.OneHundred );
-      PlatformImpl.runAndWait( () -> {} );
+      JavaFxThreading.runAndWait();
       assertThat( rows.size(), is( DigestTableRowLimit.OneHundred.getLimit() ) );
       
       systemUnderTest.setTableRowLimit( DigestTableRowLimit.TenThousand );
-      PlatformImpl.runAndWait( () -> {} );
+      JavaFxThreading.runAndWait();
       assertThat( rows.size(), is( DigestTableRowLimit.OneHundred.getLimit() ) );
    }//End Method
 
@@ -154,8 +153,8 @@ public class DigestTableControllerTest {
       for ( int i = 0; i < numberOfMessages; i++ ) {
          objectDigest.log( category, message );
       }
-      
-      PlatformImpl.runAndWait( () -> {} );
+
+      JavaFxThreading.runAndWait();
       assertThat( rows.size(), is( numberOfMessages ) );
    }//End Method
    
@@ -166,8 +165,8 @@ public class DigestTableControllerTest {
       
       final String newestMessage = "something specifically new";
       objectDigest.log( category, Messages.simpleMessage( newestMessage ) );
-      
-      PlatformImpl.runAndWait( () -> {} );
+
+      JavaFxThreading.runAndWait();
       assertThat( rows.size(), is( DigestTableRowLimit.FiveHundred.getLimit() ) );
       
       assertThat( rows.size(), is( 500 ) );
@@ -185,8 +184,8 @@ public class DigestTableControllerTest {
       digestSomeMessages( 5 );
       
       systemUnderTest.clearTable();
-      
-      PlatformImpl.runAndWait( () -> {} );
+
+      JavaFxThreading.runAndWait();
       assertThat( rows.size(), is( 0 ) );
       
       digestSomeMessages( 10 );

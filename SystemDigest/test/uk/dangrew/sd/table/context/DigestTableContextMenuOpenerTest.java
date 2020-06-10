@@ -8,23 +8,17 @@
  */
 package uk.dangrew.sd.table.context;
 
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
+import javafx.scene.input.ContextMenuEvent;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-
-import com.sun.javafx.application.PlatformImpl;
-
-import javafx.scene.input.ContextMenuEvent;
-import uk.dangrew.sd.table.context.DigestTableContextMenu;
-import uk.dangrew.sd.table.context.DigestTableContextMenuOpener;
+import uk.dangrew.kode.javafx.platform.JavaFxThreading;
 import uk.dangrew.sd.table.model.DigestTable;
+
+import static org.mockito.Mockito.*;
 
 /**
  * {@link DigestTableContextMenuOpener} test.
@@ -36,7 +30,7 @@ public class DigestTableContextMenuOpenerTest {
    private DigestTableContextMenuOpener systemUnderTest;
 
    @BeforeClass public static void initialisePlatform(){
-      PlatformImpl.startup( () -> {} );
+      JavaFxThreading.startup();
    }//End Method
    
    @Before public void initialiseSystemUnderTest(){

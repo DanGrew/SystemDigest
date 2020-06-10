@@ -18,10 +18,9 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import com.sun.javafx.application.PlatformImpl;
-
 import javafx.geometry.Pos;
 import javafx.scene.layout.ColumnConstraints;
+import uk.dangrew.kode.javafx.platform.JavaFxThreading;
 import uk.dangrew.kode.launch.TestApplication;
 import uk.dangrew.sd.core.message.Messages;
 import uk.dangrew.sd.core.progress.ProgressImpl;
@@ -50,7 +49,7 @@ public class DigestProgressBarTest {
    @Test public void manual() throws InterruptedException {
       for ( int i = 0; i < 101; i++ ) {
          final int j = i;
-         PlatformImpl.runAndWait( () -> {
+         JavaFxThreading.runAndWait( () -> {
             systemUnderTest.handleProgress( source, new ProgressImpl( j / 100.0 ), Messages.simpleMessage( "looping " + j ) );
             try {
                Thread.sleep( 100 );
@@ -59,7 +58,7 @@ public class DigestProgressBarTest {
             }
          } );
       }
-      PlatformImpl.runAndWait( () -> {
+      JavaFxThreading.runAndWait( () -> {
          systemUnderTest.handleProgress( source, Progresses.complete(), Messages.simpleMessage( "done" ) );
       } );
       Thread.sleep( 1000000 );
@@ -101,7 +100,7 @@ public class DigestProgressBarTest {
       
       final double progress = 45.34;
       final String message = "anything special to report";
-      PlatformImpl.runAndWait( () -> {
+      JavaFxThreading.runAndWait( () -> {
          systemUnderTest.handleProgress( source, Progresses.simpleProgress( progress ), Messages.simpleMessage( message ) );
       } );
       
@@ -129,7 +128,7 @@ public class DigestProgressBarTest {
       
       final double progress = 45.34;
       final String message = "anything special to report";
-      PlatformImpl.runAndWait( () -> {
+      JavaFxThreading.runAndWait( () -> {
          systemUnderTest.handleProgress( new SourceImpl( new Object() ), Progresses.simpleProgress( progress ), Messages.simpleMessage( message ) );
       } );
       
