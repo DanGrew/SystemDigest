@@ -8,21 +8,20 @@
  */
  package uk.dangrew.sd.table.presentation;
 
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.when;
-
+import javafx.scene.control.TableRow;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-
-import javafx.scene.control.TableRow;
 import uk.dangrew.kode.launch.TestApplication;
 import uk.dangrew.sd.core.category.Categories;
 import uk.dangrew.sd.table.model.DigestTableRow;
+
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.when;
 
 /**
  * {@link CategoryColouredCell} test.

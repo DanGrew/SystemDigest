@@ -8,18 +8,12 @@
  */
 package uk.dangrew.sd.progressbar.model;
 
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.isEmptyString;
-import static org.junit.Assert.assertThat;
-
+import javafx.geometry.Pos;
+import javafx.scene.layout.ColumnConstraints;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-
-import javafx.geometry.Pos;
-import javafx.scene.layout.ColumnConstraints;
+import uk.dangrew.kode.TestCommon;
 import uk.dangrew.kode.javafx.platform.JavaFxThreading;
 import uk.dangrew.kode.launch.TestApplication;
 import uk.dangrew.sd.core.message.Messages;
@@ -27,7 +21,9 @@ import uk.dangrew.sd.core.progress.ProgressImpl;
 import uk.dangrew.sd.core.progress.Progresses;
 import uk.dangrew.sd.core.source.Source;
 import uk.dangrew.sd.core.source.SourceImpl;
-import uk.dangrew.sd.utility.TestCommon;
+
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.assertThat;
 
 /**
  * {@link DigestProgressBar} test.
@@ -85,7 +81,7 @@ public class DigestProgressBarTest {
    }//End Method
       
    @Test public void messageShouldUseBoldFont(){
-      TestCommon.assertFontBold( systemUnderTest.messageLabel().getFont() );
+      TestCommon.assertThatFontIsBold( systemUnderTest.messageLabel().getFont() );
    }//End Method
 
    @Test public void shouldHaveColumnConstraintToStretchFully(){

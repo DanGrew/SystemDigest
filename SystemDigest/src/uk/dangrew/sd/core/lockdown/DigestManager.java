@@ -8,6 +8,11 @@
  */
 package uk.dangrew.sd.core.lockdown;
 
+import java.time.LocalDateTime;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.function.Supplier;
+
 import uk.dangrew.kode.synchronization.SynchronizedObservableMap;
 import uk.dangrew.sd.core.category.Category;
 import uk.dangrew.sd.core.message.Message;
@@ -16,17 +21,12 @@ import uk.dangrew.sd.core.progress.Progress;
 import uk.dangrew.sd.core.progress.ProgressFilter;
 import uk.dangrew.sd.core.source.Source;
 
-import java.time.LocalDateTime;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.function.Supplier;
-
 /**
  * The {@link DigestManager} is responsible for connecting objects that providing logging
  * and {@link Message}s to {@link DigestMessageReceiver}s that want the information.
  */
 public class DigestManager {
-   
+
    private static DigestManager instance = new DigestManager();
 
    /**
@@ -57,7 +57,7 @@ public class DigestManager {
    private final Supplier< LocalDateTime > timestampProvider;
    
    DigestManager() {
-      this( () -> LocalDateTime.now() );
+      this( LocalDateTime::now );
    }//End Constructor
    
    /**

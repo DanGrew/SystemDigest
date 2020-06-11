@@ -15,20 +15,10 @@ import javafx.scene.paint.Color;
  * can be used to show object a number of steps in a processing sequence, like when iterating
  * over a list of items.
  */
-public class ProcessingSequence implements Category {
+public class ProcessingSequence extends Category {
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override public String getName() {
-      return "Processing Sequence";
-   }//End Method
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override public Color getColour() {
-      return Color.GREEN;
-   }//End Method
+   public ProcessingSequence() {
+      super( "Processing Sequence", Color.GREEN );
+   }//End Constructor
 
 }//End Class

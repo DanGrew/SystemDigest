@@ -13,20 +13,10 @@ import javafx.scene.paint.Color;
 /**
  * The {@link Error} provides a {@link Category} for errors that are found.
  */
-public class Error implements Category {
+public class Error extends Category {
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override public String getName() {
-      return "Error";
-   }//End Method
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override public Color getColour() {
-      return Color.RED;
-   }//End Method
+   public Error() {
+      super( "Error", Color.RED );
+   }//End Constructor
 
 }//End Class

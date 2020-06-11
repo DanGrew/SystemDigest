@@ -13,20 +13,10 @@ import javafx.scene.paint.Color;
 /**
  * The {@link Information} provides a {@link Category} for general information messages.
  */
-public class Information implements Category {
+public class Information extends Category {
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override public String getName() {
-      return "Information";
-   }//End Method
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override public Color getColour() {
-      return Color.BLACK;
-   }//End Method
+   public Information() {
+      super( "Information", Color.BLACK );
+   }//End Constructor
 
 }//End Class
